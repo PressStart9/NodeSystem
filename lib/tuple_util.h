@@ -303,6 +303,10 @@ template<> struct get_tuple_value_impl<1> {
 
 template<> struct get_tuple_value_impl<0>
 {
+  template <typename Tuple>
+  static std::any value(Tuple&&, std::size_t) {
+    return {};
+  }
 };
 
 } // impl
@@ -313,7 +317,7 @@ template<> struct get_tuple_value_impl<0>
 template <typename Tuple>
 std::any get_tuple_value(Tuple&& t, std::size_t index) {
   return impl::get_tuple_value_impl<std::tuple_size_v<std::remove_reference_t<Tuple>>>::
-    template value(std::forward<Tuple>(t), index);
+    value(std::forward<Tuple>(t), index);
 }
 
 } // fun

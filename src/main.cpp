@@ -1,15 +1,19 @@
 #include <iostream>
 
-#include "NodeExample.h"
+#include "PrintNode.h"
+#include "VariableNode.h"
 
 int main() {
-  NodeExample a;
-  a.result = std::make_tuple(1.1f, 2, std::string("7"));
+  VariableNode<int> a(1);
+  VariableNode<float> b(2.2);
+  VariableNode<std::string> c("3");
 
-  NodeExample b;
-  b.inputs = { nds::Node::NodeResultPointer{ &a, 2 }, { &a, 0 }, { &a, 1 } };
+  PrintNode<int, float, std::string> d;
+  d.connect_input(a, 0, 0);
+  d.connect_input(b, 1, 1);
+  d.connect_input(c, 2, 2);
 
-  b.run();
+  d.run();
 
   return 0;
 }
