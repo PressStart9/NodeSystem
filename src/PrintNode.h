@@ -8,7 +8,7 @@ class PrintNode : public nds::Node {
   using result_tuple = std::tuple<>;
   using input_tuple = std::tuple<Args...>;
 
-  result_tuple execute(Args... args) {
+  result_tuple execute(const Args&... args) {
     execute_impl(args...);
     return {};
   }
@@ -19,7 +19,7 @@ class PrintNode : public nds::Node {
   }
 
   template <typename Head, typename... Tail>
-  void execute_impl(Head first, Tail... args) {
+  void execute_impl(const Head& first, const Tail&... args) {
     std::cout << first;
     if (sizeof...(args) > 0) {
       std::cout << " ";

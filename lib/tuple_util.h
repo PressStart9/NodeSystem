@@ -14,16 +14,16 @@ struct get_tuple_value_impl {
   template <std::size_t Offset = 0, typename Tuple>
   static std::any value(Tuple&& t, std::size_t index) {
     switch (index) {
-      case 0: return std::get<Offset + 0>(t);
-      case 1: return std::get<Offset + 1>(t);
-      case 2: return std::get<Offset + 2>(t);
-      case 3: return std::get<Offset + 3>(t);
-      case 4: return std::get<Offset + 4>(t);
-      case 5: return std::get<Offset + 5>(t);
-      case 6: return std::get<Offset + 6>(t);
-      case 7: return std::get<Offset + 7>(t);
-      case 8: return std::get<Offset + 8>(t);
-      case 9: return std::get<Offset + 9>(t);
+      case 0: return std::ref(std::get<Offset + 0>(t));
+      case 1: return std::ref(std::get<Offset + 1>(t));
+      case 2: return std::ref(std::get<Offset + 2>(t));
+      case 3: return std::ref(std::get<Offset + 3>(t));
+      case 4: return std::ref(std::get<Offset + 4>(t));
+      case 5: return std::ref(std::get<Offset + 5>(t));
+      case 6: return std::ref(std::get<Offset + 6>(t));
+      case 7: return std::ref(std::get<Offset + 7>(t));
+      case 8: return std::ref(std::get<Offset + 8>(t));
+      case 9: return std::ref(std::get<Offset + 9>(t));
       case 10: return std::get<Offset + 10>(t);
       case 11: return std::get<Offset + 11>(t);
       case 12: return std::get<Offset + 12>(t);
@@ -40,16 +40,16 @@ template<> struct get_tuple_value_impl<16> {
   template <std::size_t Offset = 0, typename Tuple>
   static std::any value(Tuple&& t, std::size_t index) {
     switch (index) {
-      case 0: return std::get<Offset + 0>(t);
-      case 1: return std::get<Offset + 1>(t);
-      case 2: return std::get<Offset + 2>(t);
-      case 3: return std::get<Offset + 3>(t);
-      case 4: return std::get<Offset + 4>(t);
-      case 5: return std::get<Offset + 5>(t);
-      case 6: return std::get<Offset + 6>(t);
-      case 7: return std::get<Offset + 7>(t);
-      case 8: return std::get<Offset + 8>(t);
-      case 9: return std::get<Offset + 9>(t);
+      case 0: return std::ref(std::get<Offset + 0>(t));
+      case 1: return std::ref(std::get<Offset + 1>(t));
+      case 2: return std::ref(std::get<Offset + 2>(t));
+      case 3: return std::ref(std::get<Offset + 3>(t));
+      case 4: return std::ref(std::get<Offset + 4>(t));
+      case 5: return std::ref(std::get<Offset + 5>(t));
+      case 6: return std::ref(std::get<Offset + 6>(t));
+      case 7: return std::ref(std::get<Offset + 7>(t));
+      case 8: return std::ref(std::get<Offset + 8>(t));
+      case 9: return std::ref(std::get<Offset + 9>(t));
       case 10: return std::get<Offset + 10>(t);
       case 11: return std::get<Offset + 11>(t);
       case 12: return std::get<Offset + 12>(t);
@@ -64,16 +64,16 @@ template<> struct get_tuple_value_impl<15> {
   template <std::size_t Offset = 0, typename Tuple>
   static std::any value(Tuple&& t, std::size_t index) {
     switch (index) {
-      case 0: return std::get<Offset + 0>(t);
-      case 1: return std::get<Offset + 1>(t);
-      case 2: return std::get<Offset + 2>(t);
-      case 3: return std::get<Offset + 3>(t);
-      case 4: return std::get<Offset + 4>(t);
-      case 5: return std::get<Offset + 5>(t);
-      case 6: return std::get<Offset + 6>(t);
-      case 7: return std::get<Offset + 7>(t);
-      case 8: return std::get<Offset + 8>(t);
-      case 9: return std::get<Offset + 9>(t);
+      case 0: return std::ref(std::get<Offset + 0>(t));
+      case 1: return std::ref(std::get<Offset + 1>(t));
+      case 2: return std::ref(std::get<Offset + 2>(t));
+      case 3: return std::ref(std::get<Offset + 3>(t));
+      case 4: return std::ref(std::get<Offset + 4>(t));
+      case 5: return std::ref(std::get<Offset + 5>(t));
+      case 6: return std::ref(std::get<Offset + 6>(t));
+      case 7: return std::ref(std::get<Offset + 7>(t));
+      case 8: return std::ref(std::get<Offset + 8>(t));
+      case 9: return std::ref(std::get<Offset + 9>(t));
       case 10: return std::get<Offset + 10>(t);
       case 11: return std::get<Offset + 11>(t);
       case 12: return std::get<Offset + 12>(t);
@@ -87,16 +87,16 @@ template<> struct get_tuple_value_impl<14> {
   template <std::size_t Offset = 0, typename Tuple>
   static std::any value(Tuple&& t, std::size_t index) {
     switch (index) {
-      case 0: return std::get<Offset + 0>(t);
-      case 1: return std::get<Offset + 1>(t);
-      case 2: return std::get<Offset + 2>(t);
-      case 3: return std::get<Offset + 3>(t);
-      case 4: return std::get<Offset + 4>(t);
-      case 5: return std::get<Offset + 5>(t);
-      case 6: return std::get<Offset + 6>(t);
-      case 7: return std::get<Offset + 7>(t);
-      case 8: return std::get<Offset + 8>(t);
-      case 9: return std::get<Offset + 9>(t);
+      case 0: return std::ref(std::get<Offset + 0>(t));
+      case 1: return std::ref(std::get<Offset + 1>(t));
+      case 2: return std::ref(std::get<Offset + 2>(t));
+      case 3: return std::ref(std::get<Offset + 3>(t));
+      case 4: return std::ref(std::get<Offset + 4>(t));
+      case 5: return std::ref(std::get<Offset + 5>(t));
+      case 6: return std::ref(std::get<Offset + 6>(t));
+      case 7: return std::ref(std::get<Offset + 7>(t));
+      case 8: return std::ref(std::get<Offset + 8>(t));
+      case 9: return std::ref(std::get<Offset + 9>(t));
       case 10: return std::get<Offset + 10>(t);
       case 11: return std::get<Offset + 11>(t);
       case 12: return std::get<Offset + 12>(t);
@@ -109,16 +109,16 @@ template<> struct get_tuple_value_impl<13> {
   template <std::size_t Offset = 0, typename Tuple>
   static std::any value(Tuple&& t, std::size_t index) {
     switch (index) {
-      case 0: return std::get<Offset + 0>(t);
-      case 1: return std::get<Offset + 1>(t);
-      case 2: return std::get<Offset + 2>(t);
-      case 3: return std::get<Offset + 3>(t);
-      case 4: return std::get<Offset + 4>(t);
-      case 5: return std::get<Offset + 5>(t);
-      case 6: return std::get<Offset + 6>(t);
-      case 7: return std::get<Offset + 7>(t);
-      case 8: return std::get<Offset + 8>(t);
-      case 9: return std::get<Offset + 9>(t);
+      case 0: return std::ref(std::get<Offset + 0>(t));
+      case 1: return std::ref(std::get<Offset + 1>(t));
+      case 2: return std::ref(std::get<Offset + 2>(t));
+      case 3: return std::ref(std::get<Offset + 3>(t));
+      case 4: return std::ref(std::get<Offset + 4>(t));
+      case 5: return std::ref(std::get<Offset + 5>(t));
+      case 6: return std::ref(std::get<Offset + 6>(t));
+      case 7: return std::ref(std::get<Offset + 7>(t));
+      case 8: return std::ref(std::get<Offset + 8>(t));
+      case 9: return std::ref(std::get<Offset + 9>(t));
       case 10: return std::get<Offset + 10>(t);
       case 11: return std::get<Offset + 11>(t);
       default: return std::get<Offset + 12>(t);
@@ -130,16 +130,16 @@ template<> struct get_tuple_value_impl<12> {
   template <std::size_t Offset = 0, typename Tuple>
   static std::any value(Tuple&& t, std::size_t index) {
     switch (index) {
-      case 0: return std::get<Offset + 0>(t);
-      case 1: return std::get<Offset + 1>(t);
-      case 2: return std::get<Offset + 2>(t);
-      case 3: return std::get<Offset + 3>(t);
-      case 4: return std::get<Offset + 4>(t);
-      case 5: return std::get<Offset + 5>(t);
-      case 6: return std::get<Offset + 6>(t);
-      case 7: return std::get<Offset + 7>(t);
-      case 8: return std::get<Offset + 8>(t);
-      case 9: return std::get<Offset + 9>(t);
+      case 0: return std::ref(std::get<Offset + 0>(t));
+      case 1: return std::ref(std::get<Offset + 1>(t));
+      case 2: return std::ref(std::get<Offset + 2>(t));
+      case 3: return std::ref(std::get<Offset + 3>(t));
+      case 4: return std::ref(std::get<Offset + 4>(t));
+      case 5: return std::ref(std::get<Offset + 5>(t));
+      case 6: return std::ref(std::get<Offset + 6>(t));
+      case 7: return std::ref(std::get<Offset + 7>(t));
+      case 8: return std::ref(std::get<Offset + 8>(t));
+      case 9: return std::ref(std::get<Offset + 9>(t));
       case 10: return std::get<Offset + 10>(t);
       default: return std::get<Offset + 11>(t);
     }
@@ -150,16 +150,16 @@ template<> struct get_tuple_value_impl<11> {
   template <std::size_t Offset = 0, typename Tuple>
   static std::any value(Tuple&& t, std::size_t index) {
     switch (index) {
-      case 0: return std::get<Offset + 0>(t);
-      case 1: return std::get<Offset + 1>(t);
-      case 2: return std::get<Offset + 2>(t);
-      case 3: return std::get<Offset + 3>(t);
-      case 4: return std::get<Offset + 4>(t);
-      case 5: return std::get<Offset + 5>(t);
-      case 6: return std::get<Offset + 6>(t);
-      case 7: return std::get<Offset + 7>(t);
-      case 8: return std::get<Offset + 8>(t);
-      case 9: return std::get<Offset + 9>(t);
+      case 0: return std::ref(std::get<Offset + 0>(t));
+      case 1: return std::ref(std::get<Offset + 1>(t));
+      case 2: return std::ref(std::get<Offset + 2>(t));
+      case 3: return std::ref(std::get<Offset + 3>(t));
+      case 4: return std::ref(std::get<Offset + 4>(t));
+      case 5: return std::ref(std::get<Offset + 5>(t));
+      case 6: return std::ref(std::get<Offset + 6>(t));
+      case 7: return std::ref(std::get<Offset + 7>(t));
+      case 8: return std::ref(std::get<Offset + 8>(t));
+      case 9: return std::ref(std::get<Offset + 9>(t));
       default: return std::get<Offset + 10>(t);
     }
   }
@@ -169,16 +169,16 @@ template<> struct get_tuple_value_impl<10> {
   template <std::size_t Offset = 0, typename Tuple>
   static std::any value(Tuple&& t, std::size_t index) {
     switch (index) {
-      case 0: return std::get<Offset + 0>(t);
-      case 1: return std::get<Offset + 1>(t);
-      case 2: return std::get<Offset + 2>(t);
-      case 3: return std::get<Offset + 3>(t);
-      case 4: return std::get<Offset + 4>(t);
-      case 5: return std::get<Offset + 5>(t);
-      case 6: return std::get<Offset + 6>(t);
-      case 7: return std::get<Offset + 7>(t);
-      case 8: return std::get<Offset + 8>(t);
-      default: return std::get<Offset + 9>(t);
+      case 0: return std::ref(std::get<Offset + 0>(t));
+      case 1: return std::ref(std::get<Offset + 1>(t));
+      case 2: return std::ref(std::get<Offset + 2>(t));
+      case 3: return std::ref(std::get<Offset + 3>(t));
+      case 4: return std::ref(std::get<Offset + 4>(t));
+      case 5: return std::ref(std::get<Offset + 5>(t));
+      case 6: return std::ref(std::get<Offset + 6>(t));
+      case 7: return std::ref(std::get<Offset + 7>(t));
+      case 8: return std::ref(std::get<Offset + 8>(t));
+      default: return std::ref(std::get<Offset + 9>(t));
     }
   }
 };
@@ -187,15 +187,15 @@ template<> struct get_tuple_value_impl<9> {
   template <std::size_t Offset = 0, typename Tuple>
   static std::any value(Tuple&& t, std::size_t index) {
     switch (index) {
-      case 0: return std::get<Offset + 0>(t);
-      case 1: return std::get<Offset + 1>(t);
-      case 2: return std::get<Offset + 2>(t);
-      case 3: return std::get<Offset + 3>(t);
-      case 4: return std::get<Offset + 4>(t);
-      case 5: return std::get<Offset + 5>(t);
-      case 6: return std::get<Offset + 6>(t);
-      case 7: return std::get<Offset + 7>(t);
-      default: return std::get<Offset + 8>(t);
+      case 0: return std::ref(std::get<Offset + 0>(t));
+      case 1: return std::ref(std::get<Offset + 1>(t));
+      case 2: return std::ref(std::get<Offset + 2>(t));
+      case 3: return std::ref(std::get<Offset + 3>(t));
+      case 4: return std::ref(std::get<Offset + 4>(t));
+      case 5: return std::ref(std::get<Offset + 5>(t));
+      case 6: return std::ref(std::get<Offset + 6>(t));
+      case 7: return std::ref(std::get<Offset + 7>(t));
+      default: return std::ref(std::get<Offset + 8>(t));
     }
   }
 };
@@ -204,14 +204,14 @@ template<> struct get_tuple_value_impl<8> {
   template <std::size_t Offset = 0, typename Tuple>
   static std::any value(Tuple&& t, std::size_t index) {
     switch (index) {
-      case 0: return std::get<Offset + 0>(t);
-      case 1: return std::get<Offset + 1>(t);
-      case 2: return std::get<Offset + 2>(t);
-      case 3: return std::get<Offset + 3>(t);
-      case 4: return std::get<Offset + 4>(t);
-      case 5: return std::get<Offset + 5>(t);
-      case 6: return std::get<Offset + 6>(t);
-      default: return std::get<Offset + 7>(t);
+      case 0: return std::ref(std::get<Offset + 0>(t));
+      case 1: return std::ref(std::get<Offset + 1>(t));
+      case 2: return std::ref(std::get<Offset + 2>(t));
+      case 3: return std::ref(std::get<Offset + 3>(t));
+      case 4: return std::ref(std::get<Offset + 4>(t));
+      case 5: return std::ref(std::get<Offset + 5>(t));
+      case 6: return std::ref(std::get<Offset + 6>(t));
+      default: return std::ref(std::get<Offset + 7>(t));
     }
   }
 };
@@ -220,13 +220,13 @@ template<> struct get_tuple_value_impl<7> {
   template <std::size_t Offset = 0, typename Tuple>
   static std::any value(Tuple&& t, std::size_t index) {
     switch (index) {
-      case 0: return std::get<Offset + 0>(t);
-      case 1: return std::get<Offset + 1>(t);
-      case 2: return std::get<Offset + 2>(t);
-      case 3: return std::get<Offset + 3>(t);
-      case 4: return std::get<Offset + 4>(t);
-      case 5: return std::get<Offset + 5>(t);
-      default: return std::get<Offset + 6>(t);
+      case 0: return std::ref(std::get<Offset + 0>(t));
+      case 1: return std::ref(std::get<Offset + 1>(t));
+      case 2: return std::ref(std::get<Offset + 2>(t));
+      case 3: return std::ref(std::get<Offset + 3>(t));
+      case 4: return std::ref(std::get<Offset + 4>(t));
+      case 5: return std::ref(std::get<Offset + 5>(t));
+      default: return std::ref(std::get<Offset + 6>(t));
     }
   }
 };
@@ -235,13 +235,13 @@ template<> struct get_tuple_value_impl<6> {
   template <std::size_t Offset = 0, typename Tuple>
   static std::any value(Tuple&& t, std::size_t index) {
     switch (index) {
-      case 0: return std::get<Offset + 0>(t);
-      case 1: return std::get<Offset + 1>(t);
-      case 2: return std::get<Offset + 2>(t);
-      case 3: return std::get<Offset + 3>(t);
-      case 4: return std::get<Offset + 4>(t);
-      case 5: return std::get<Offset + 5>(t);
-      default: return std::get<Offset + 5>(t);
+      case 0: return std::ref(std::get<Offset + 0>(t));
+      case 1: return std::ref(std::get<Offset + 1>(t));
+      case 2: return std::ref(std::get<Offset + 2>(t));
+      case 3: return std::ref(std::get<Offset + 3>(t));
+      case 4: return std::ref(std::get<Offset + 4>(t));
+      case 5: return std::ref(std::get<Offset + 5>(t));
+      default: return std::ref(std::get<Offset + 5>(t));
     }
   }
 };
@@ -250,11 +250,11 @@ template<> struct get_tuple_value_impl<5> {
   template <std::size_t Offset = 0, typename Tuple>
   static std::any value(Tuple&& t, std::size_t index) {
     switch (index) {
-      case 0: return std::get<Offset + 0>(t);
-      case 1: return std::get<Offset + 1>(t);
-      case 2: return std::get<Offset + 2>(t);
-      case 3: return std::get<Offset + 3>(t);
-      default: return std::get<Offset + 4>(t);
+      case 0: return std::ref(std::get<Offset + 0>(t));
+      case 1: return std::ref(std::get<Offset + 1>(t));
+      case 2: return std::ref(std::get<Offset + 2>(t));
+      case 3: return std::ref(std::get<Offset + 3>(t));
+      default: return std::ref(std::get<Offset + 4>(t));
     }
   }
 };
@@ -263,10 +263,10 @@ template<> struct get_tuple_value_impl<4> {
   template <std::size_t Offset = 0, typename Tuple>
   static std::any value(Tuple&& t, std::size_t index) {
     switch (index) {
-      case 0: return std::get<Offset + 0>(t);
-      case 1: return std::get<Offset + 1>(t);
-      case 2: return std::get<Offset + 2>(t);
-      default: return std::get<Offset + 3>(t);
+      case 0: return std::ref(std::get<Offset + 0>(t));
+      case 1: return std::ref(std::get<Offset + 1>(t));
+      case 2: return std::ref(std::get<Offset + 2>(t));
+      default: return std::ref(std::get<Offset + 3>(t));
     }
   }
 };
@@ -275,9 +275,9 @@ template<> struct get_tuple_value_impl<3> {
   template <std::size_t Offset = 0, typename Tuple>
   static std::any value(Tuple&& t, std::size_t index) {
     switch (index) {
-      case 0: return std::get<Offset + 0>(t);
-      case 1: return std::get<Offset + 1>(t);
-      default: return std::get<Offset + 2>(t);
+      case 0: return std::ref(std::get<Offset + 0>(t));
+      case 1: return std::ref(std::get<Offset + 1>(t));
+      default: return std::ref(std::get<Offset + 2>(t));
     }
   }
 };
@@ -286,8 +286,8 @@ template<> struct get_tuple_value_impl<2> {
   template <std::size_t Offset = 0, typename Tuple>
   static std::any value(Tuple&& t, std::size_t index) {
     switch (index) {
-      case 0: return std::get<Offset + 0>(t);
-      default: return std::get<Offset + 1>(t);
+      case 0: return std::ref(std::get<Offset + 0>(t));
+      default: return std::ref(std::get<Offset + 1>(t));
     }
   }
 };
@@ -296,7 +296,7 @@ template<> struct get_tuple_value_impl<1> {
   template <std::size_t Offset = 0, typename Tuple>
   static std::any value(Tuple&& t, std::size_t index) {
     switch (index) {
-      default: return std::get<Offset + 0>(t);
+      default: return std::ref(std::get<Offset + 0>(t));
     }
   }
 };

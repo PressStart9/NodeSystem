@@ -8,8 +8,8 @@ class VariableNode : public nds::Node {
   using result_tuple = std::tuple<T>;
   using input_tuple = std::tuple<>;
 
-  explicit VariableNode(const T& value) : var_(value) {
-  }
+  explicit VariableNode(const T& value) : var_(value) {}
+  explicit VariableNode(T&& value) : var_(std::move(value)) {}
 
   result_tuple execute() {
     return {var_};
