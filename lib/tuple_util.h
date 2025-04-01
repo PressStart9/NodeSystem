@@ -1,6 +1,7 @@
 #pragma once
 
 #include <tuple>
+#include <any>
 #include <stdexcept>
 
 namespace fun {
@@ -24,12 +25,12 @@ struct get_tuple_value_impl {
       case 7: return std::ref(std::get<Offset + 7>(t));
       case 8: return std::ref(std::get<Offset + 8>(t));
       case 9: return std::ref(std::get<Offset + 9>(t));
-      case 10: return std::get<Offset + 10>(t);
-      case 11: return std::get<Offset + 11>(t);
-      case 12: return std::get<Offset + 12>(t);
-      case 13: return std::get<Offset + 13>(t);
-      case 14: return std::get<Offset + 14>(t);
-      case 15: return std::get<Offset + 15>(t);
+      case 10: return std::ref(std::get<Offset + 10>(t));
+      case 11: return std::ref(std::get<Offset + 11>(t));
+      case 12: return std::ref(std::get<Offset + 12>(t));
+      case 13: return std::ref(std::get<Offset + 13>(t));
+      case 14: return std::ref(std::get<Offset + 14>(t));
+      case 15: return std::ref(std::get<Offset + 15>(t));
       default: return get_tuple_value_impl<Legth - 16>::template
             value<Offset + 16>(std::forward<Tuple>(t), index - 16);
     }
@@ -50,12 +51,12 @@ template<> struct get_tuple_value_impl<16> {
       case 7: return std::ref(std::get<Offset + 7>(t));
       case 8: return std::ref(std::get<Offset + 8>(t));
       case 9: return std::ref(std::get<Offset + 9>(t));
-      case 10: return std::get<Offset + 10>(t);
-      case 11: return std::get<Offset + 11>(t);
-      case 12: return std::get<Offset + 12>(t);
-      case 13: return std::get<Offset + 13>(t);
-      case 14: return std::get<Offset + 14>(t);
-      default: return std::get<Offset + 15>(t);
+      case 10: return std::ref(std::get<Offset + 10>(t));
+      case 11: return std::ref(std::get<Offset + 11>(t));
+      case 12: return std::ref(std::get<Offset + 12>(t));
+      case 13: return std::ref(std::get<Offset + 13>(t));
+      case 14: return std::ref(std::get<Offset + 14>(t));
+      default: return std::ref(std::get<Offset + 15>(t));
     }
   }
 };
@@ -74,11 +75,11 @@ template<> struct get_tuple_value_impl<15> {
       case 7: return std::ref(std::get<Offset + 7>(t));
       case 8: return std::ref(std::get<Offset + 8>(t));
       case 9: return std::ref(std::get<Offset + 9>(t));
-      case 10: return std::get<Offset + 10>(t);
-      case 11: return std::get<Offset + 11>(t);
-      case 12: return std::get<Offset + 12>(t);
-      case 13: return std::get<Offset + 13>(t);
-      default: return std::get<Offset + 14>(t);
+      case 10: return std::ref(std::get<Offset + 10>(t));
+      case 11: return std::ref(std::get<Offset + 11>(t));
+      case 12: return std::ref(std::get<Offset + 12>(t));
+      case 13: return std::ref(std::get<Offset + 13>(t));
+      default: return std::ref(std::get<Offset + 14>(t));
     }
   }
 };
@@ -97,10 +98,10 @@ template<> struct get_tuple_value_impl<14> {
       case 7: return std::ref(std::get<Offset + 7>(t));
       case 8: return std::ref(std::get<Offset + 8>(t));
       case 9: return std::ref(std::get<Offset + 9>(t));
-      case 10: return std::get<Offset + 10>(t);
-      case 11: return std::get<Offset + 11>(t);
-      case 12: return std::get<Offset + 12>(t);
-      default: return std::get<Offset + 13>(t);
+      case 10: return std::ref(std::get<Offset + 10>(t));
+      case 11: return std::ref(std::get<Offset + 11>(t));
+      case 12: return std::ref(std::get<Offset + 12>(t));
+      default: return std::ref(std::get<Offset + 13>(t));
     }
   }
 };
@@ -119,9 +120,9 @@ template<> struct get_tuple_value_impl<13> {
       case 7: return std::ref(std::get<Offset + 7>(t));
       case 8: return std::ref(std::get<Offset + 8>(t));
       case 9: return std::ref(std::get<Offset + 9>(t));
-      case 10: return std::get<Offset + 10>(t);
-      case 11: return std::get<Offset + 11>(t);
-      default: return std::get<Offset + 12>(t);
+      case 10: return std::ref(std::get<Offset + 10>(t));
+      case 11: return std::ref(std::get<Offset + 11>(t));
+      default: return std::ref(std::get<Offset + 12>(t));
     }
   }
 };
@@ -140,8 +141,8 @@ template<> struct get_tuple_value_impl<12> {
       case 7: return std::ref(std::get<Offset + 7>(t));
       case 8: return std::ref(std::get<Offset + 8>(t));
       case 9: return std::ref(std::get<Offset + 9>(t));
-      case 10: return std::get<Offset + 10>(t);
-      default: return std::get<Offset + 11>(t);
+      case 10: return std::ref(std::get<Offset + 10>(t));
+      default: return std::ref(std::get<Offset + 11>(t));
     }
   }
 };
@@ -160,7 +161,7 @@ template<> struct get_tuple_value_impl<11> {
       case 7: return std::ref(std::get<Offset + 7>(t));
       case 8: return std::ref(std::get<Offset + 8>(t));
       case 9: return std::ref(std::get<Offset + 9>(t));
-      default: return std::get<Offset + 10>(t);
+      default: return std::ref(std::get<Offset + 10>(t));
     }
   }
 };
@@ -319,5 +320,44 @@ std::any get_tuple_value(Tuple&& t, std::size_t index) {
   return impl::get_tuple_value_impl<std::tuple_size_v<std::remove_reference_t<Tuple>>>::
     value(std::forward<Tuple>(t), index);
 }
+
+template<typename TResult>
+struct parse_tuple {
+  using result_t = std::tuple<TResult>;
+};
+
+template<>
+struct parse_tuple<void> {
+  using result_t = std::tuple<>;
+};
+
+template<typename... TResults>
+struct parse_tuple<std::tuple<TResults...>> {
+  using result_t = std::tuple<TResults...>;
+};
+
+template<typename TFunction>
+struct function_signature;
+
+template<typename TResult, typename TClassPart, typename... TArgs>
+struct function_signature<TResult(TClassPart::*)(TArgs...)>
+{
+  using result_t = TResult;
+  using arguments_t = std::tuple<TArgs...>;
+};
+
+template <typename Tuple>
+struct make_reference_tuple;
+
+template <typename... TArguments>
+struct make_reference_tuple<std::tuple<TArguments...>> {
+  using type = std::tuple<std::reference_wrapper<std::remove_cv_t<std::remove_reference_t<TArguments>>>...>;
+};
+
+template<template<typename...> class TSpec, typename TType>
+struct is_instantiation_of : std::false_type {};
+
+template<template<typename...> class TSpec, typename... TArgs>
+struct is_instantiation_of<TSpec, TSpec<TArgs...>> : std::true_type {};
 
 } // fun

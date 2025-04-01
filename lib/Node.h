@@ -8,22 +8,24 @@
 
 namespace nds {
 
-#define VIRTUAL_FUNCTION_WRAPPER \
- private: \
-  template <typename Tuple> \
-  struct make_reference_tuple; \
- \
-  template <typename... TArguments> \
-  struct make_reference_tuple<std::tuple<TArguments...>> { \
-    using type = std::tuple<std::reference_wrapper<TArguments>...>; \
-  }; \
- \
-  using reference_tuple = typename make_reference_tuple<input_tuple>::type; \
- \
+#define VIRTUAL_FUNCTION_WRAPPER(ClassName) \
  public: \
+  using func_sign = fun::function_signature<std::remove_pointer_t<decltype(&ClassName::execute)>>; \
+  using result_tuple = typename fun::parse_tuple<typename func_sign::result_t>::result_t; \
+  using input_tuple = typename func_sign::arguments_t; \
+  using reference_tuple = typename fun::make_reference_tuple<input_tuple>::type; \
+ \
   void run() override { \
-    result_ = std::move(std::apply([this]<typename... TArgumentss>(TArgumentss&&... args) { \
-      return this->execute(std::forward<TArgumentss>(args)...); }, get_node_inputs<reference_tuple>(inputs_))); \
+    if constexpr (std::is_same_v<void, typename func_sign::result_t>) { \
+      std::apply([this]<typename... TArguments>(TArguments&&... args) { \
+        this->execute(std::forward<TArguments>(args)...); }, get_node_inputs<reference_tuple>(inputs_)); \
+    } else if constexpr (fun::is_instantiation_of<std::tuple, typename func_sign::result_t>{}) { \
+      result_ = std::move(std::apply([this]<typename... TArguments>(TArguments&&... args) { \
+        return this->execute(std::forward<TArguments>(args)...); }, get_node_inputs<reference_tuple>(inputs_))); \
+    } else { \
+      result_ = std::move(std::make_tuple(std::apply([this]<typename... TArguments>(TArguments&&... args) { \
+        return this->execute(std::forward<TArguments>(args)...); }, get_node_inputs<reference_tuple>(inputs_)))); \
+    } \
   } \
  \
   void connect_input(Node& src_node, std::size_t src_index, std::size_t dest_index) override { \
@@ -73,9 +75,9 @@ class Node {
   Tuple initialize_tuple_impl(
       const std::array<NodeResultPointer, std::tuple_size_v<Tuple>>& previous_results,
       std::index_sequence<Ind...>) {
+    bool is_any_not_init = (... || (previous_results[Ind].node == nullptr));
+    if (is_any_not_init) { throw std::runtime_error("All inputs of node must be connected."); }
     return std::make_tuple(
-      previous_results[Ind].node == nullptr ?
-      throw std::runtime_error("All inputs of node must be connected.") :
       std::any_cast<std::tuple_element_t<Ind, Tuple>>(
         previous_results[Ind].node->get_result_elem(previous_results[Ind].index))...);
   }

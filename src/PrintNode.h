@@ -5,12 +5,8 @@
 template<typename... Args>
 class PrintNode : public nds::Node {
  public:
-  using result_tuple = std::tuple<>;
-  using input_tuple = std::tuple<Args...>;
-
-  result_tuple execute(const Args&... args) {
+  void execute(const Args&... args) {
     execute_impl(args...);
-    return {};
   }
 
  private:
@@ -27,5 +23,5 @@ class PrintNode : public nds::Node {
     execute_impl(args...);
   }
 
-  VIRTUAL_FUNCTION_WRAPPER;
+  VIRTUAL_FUNCTION_WRAPPER(PrintNode<Args...>);
 };

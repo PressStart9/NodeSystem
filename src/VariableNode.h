@@ -5,18 +5,15 @@
 template<typename T>
 class VariableNode : public nds::Node {
  public:
-  using result_tuple = std::tuple<T>;
-  using input_tuple = std::tuple<>;
-
   explicit VariableNode(const T& value) : var_(value) {}
   explicit VariableNode(T&& value) : var_(std::move(value)) {}
 
-  result_tuple execute() {
+  T execute() {
     return {var_};
   }
 
  private:
   T var_;
 
-  VIRTUAL_FUNCTION_WRAPPER;
+  VIRTUAL_FUNCTION_WRAPPER(VariableNode<T>);
 };
