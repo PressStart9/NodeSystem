@@ -1,7 +1,5 @@
-add_library(node_system
-        Node.cpp
-)
+add_library(node_system INTERFACE)
 
-target_include_directories(node_system PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
+set_target_properties(node_system PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}
 )

@@ -2,6 +2,8 @@
 
 #include "Node.h"
 
+namespace nds::ex {
+
 template<typename... Args>
 class PrintNode : public nds::Node {
  public:
@@ -10,12 +12,12 @@ class PrintNode : public nds::Node {
   }
 
  private:
-  void execute_impl() {
+  static void execute_impl() {
   	std::cout << '\n';
   }
 
   template <typename Head, typename... Tail>
-  void execute_impl(const Head& first, const Tail&... args) {
+  static void execute_impl(const Head& first, const Tail&... args) {
     std::cout << first;
     if (sizeof...(args) > 0) {
       std::cout << " ";
@@ -23,5 +25,7 @@ class PrintNode : public nds::Node {
     execute_impl(args...);
   }
 
-  VIRTUAL_FUNCTION_WRAPPER(PrintNode<Args...>);
+  NODE_SYSTEM_IMPLEMENTATION(PrintNode<Args...>);
 };
+
+} // nds::ex

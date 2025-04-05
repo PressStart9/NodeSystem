@@ -1,8 +1,7 @@
 add_executable(example
         main.cpp
-        VariableNode.h
 )
 
-target_link_libraries(example
+target_link_libraries(example PRIVATE
         node_system
 )
