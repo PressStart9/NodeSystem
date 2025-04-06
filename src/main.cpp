@@ -6,6 +6,22 @@
 #include "examples/PrintNode.h"
 #include "examples/VariableNode.h"
 
+void* operator new(std::size_t sz)
+{
+  std::cout << "new\n";
+  if (sz == 0) { ++sz; }
+  if (void *ptr = std::malloc(sz)) { return ptr; }
+  throw std::bad_alloc{};
+}
+
+void* operator new[](std::size_t sz)
+{
+  std::cout << "new[]\n";
+  if (sz == 0) { ++sz; }
+  if (void *ptr = std::malloc(sz)) { return ptr; }
+  throw std::bad_alloc{};
+}
+
 struct Test {
   Test() {
     std::cout << "Construct" << '\n';
@@ -33,16 +49,18 @@ std::ostream& operator<<(std::ostream& stream,
 }
 
 int main() {
-  nds::ex::VariableNode<Test> a(Test{});
-  nds::ex::VariableNode<float> b(2.2);
-  nds::ex::VariableNode<std::string> c("3");
+  auto a = std::make_shared<nds::ex::VariableNode<Test>>(Test{});
+  auto b = std::make_shared<nds::ex::VariableNode<float>>(2.2);
+  auto c = std::make_shared<nds::ex::VariableNode<std::string>>("hello");
+
+  std::shared_ptr<nds::Node> temp;
 
   nds::ex::PrintNode<Test, float, std::string> d;
-  d.connect_input(a, 0, 0);
-  d.connect_input(b, 1, 1);
-  d.connect_input(c, 2, 2);
+  d.connect_input(a, 0, 0, temp);
+  d.connect_input(b, 1, 1, temp);
+  d.connect_input(c, 2, 2, temp);
 
-  assert(!d.connect_input(a, 0, 1));
+  assert(!d.connect_input(a, 0, 1, temp));
 
   try {
     d.run();

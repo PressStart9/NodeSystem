@@ -2,10 +2,12 @@
 
 #include <any>
 #include <array>
+#include <memory>
 #include <optional>
 
-#include "business_logic_exceptions.h"
-#include "tuple_util.h"
+#include "util/business_logic_exceptions.h"
+#include "util/node_util.h"
+#include "util/tuple_util.h"
 
 namespace nds {
 
@@ -30,12 +32,15 @@ namespace nds {
     } \
   } \
  \
-  bool connect_input(Node& src_node, std::size_t src_index, std::size_t dest_index) override { \
-    if (nds::fun::get_tuple_value_type_id<input_tuple_t>(dest_index) != src_node.get_result_elem_type_id(src_index)) { \
+  bool connect_input(std::shared_ptr<Node> src_node, std::size_t src_index, std::size_t dest_index, \
+      std::shared_ptr<Node>& previous_node) override { \
+    previous_node = inputs_[dest_index].node; \
+    if (nds::fun::get_tuple_value_type_id<input_tuple_t>(dest_index) != src_node->get_result_elem_type_id(src_index)) { \
       return false; \
     } \
     invalidate(); \
-    inputs_[dest_index] = { &src_node, src_index }; \
+    inputs_[dest_index].node = src_node; \
+    inputs_[dest_index].index = src_index; \
     return true; \
   } \
  \
@@ -43,7 +48,7 @@ namespace nds {
     result_ = {}; \
   } \
  \
-  std::any get_result_elem(std::size_t index) override { \
+  void* get_result_elem(std::size_t index) override { \
     if (!result_.has_value()) { \
       run(); \
     } \
@@ -61,7 +66,7 @@ namespace nds {
 /// @brief Base class for program nodes.
 /// Actions to create new node class:
 /// 1. Inherent new class from `nds::Node`.
-/// 2. AT THE END of class append macros `NODE_SYSTEM_IMPLEMENTATION` with class signature as parameter.
+/// 2. At the end of class append macros `NODE_SYSTEM_IMPLEMENTATION` with class signature as parameter.
 /// 3. Write function called `execution`:
 ///   - arguments will be passed from other nodes;
 ///   - result can be passed to other nodes:
@@ -84,21 +89,23 @@ class Node {
   /// @param src_node node whose result will be connected.
   /// @param src_index index of output in src_node.
   /// @param dest_index index of input in this node.
+  /// @param previous_node variable of pointer to node which will be set to previous node pointer.
   /// @return true if types of input and output are same and indexes are correct, else false.
-  virtual bool connect_input(Node& src_node, std::size_t src_index, std::size_t dest_index) = 0;
+  virtual bool connect_input(std::shared_ptr<Node> src_node, std::size_t src_index,
+    std::size_t dest_index, std::shared_ptr<Node>& previous_node) = 0;
 
   /// @brief Deletes result of this node's work.
   virtual void invalidate() = 0;
 
   /// @brief Gets specific result of work of this node by index.
-  virtual std::any get_result_elem(std::size_t index) = 0;
+  virtual void* get_result_elem(std::size_t index) = 0;
 
   /// @brief Gets type id of specific result of work of this node by index.
   virtual size_t get_result_elem_type_id(std::size_t index) = 0;
 
  protected:
   struct NodeResultPointer {
-    Node* node = nullptr;
+    std::shared_ptr<Node> node = nullptr;
     std::size_t index = 0;
   };
 
@@ -117,8 +124,8 @@ class Node {
       throw exc::no_source_error();
     }
     return std::make_tuple(
-      std::any_cast<std::tuple_element_t<Ind, Tuple>>(
-        previous_results[Ind].node->get_result_elem(previous_results[Ind].index))...);
+      std::ref(*reinterpret_cast<typename std::tuple_element_t<Ind, Tuple>::type*>(
+        previous_results[Ind].node->get_result_elem(previous_results[Ind].index)))...);
   }
 };
 

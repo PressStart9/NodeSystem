@@ -5,7 +5,7 @@
 namespace nds::ex {
 template<typename T>
 class VariableNode : public nds::Node {
-  public:
+ public:
   explicit VariableNode(const T& value) : var_(value) {}
   explicit VariableNode(T&& value) : var_(std::move(value)) {}
 
@@ -13,7 +13,7 @@ class VariableNode : public nds::Node {
     return {var_};
   }
 
-  private:
+ private:
   T var_;
 
   NODE_SYSTEM_IMPLEMENTATION(VariableNode<T>);
