@@ -1,13 +1,11 @@
 #pragma once
 
-#include "Node.h"
-
 namespace nds::ex {
 
 template<typename... Args>
-class PrintNode : public nds::Node {
+class PrintNode {
  public:
-  void execute(const Args&... args) {
+  void operator()(const Args&... args) {
     execute_impl(args...);
   }
 
@@ -24,8 +22,6 @@ class PrintNode : public nds::Node {
     }
     execute_impl(args...);
   }
-
-  NODE_SYSTEM_IMPLEMENTATION(PrintNode<Args...>);
 };
 
 } // nds::ex

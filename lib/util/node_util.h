@@ -54,11 +54,11 @@ struct is_instantiation_of_impl<TType, TType<TArgs...>> : std::true_type {};
 template<typename TType>
 using parse_tuple_t = typename impl::parse_tuple_impl<TType>::result_t;
 
-/// @brief ???
+/// @brief Type of member function result.
 template<typename TFunction>
 using function_result_t = typename impl::function_signature_impl<TFunction>::result_t;
 
-/// @brief ???
+/// @brief Type of member function arguments as `std::tuple`.
 template<typename TFunction>
 using function_arguments_t = typename impl::function_signature_impl<TFunction>::arguments_t;
 

@@ -1,7 +1,9 @@
 #include <cassert>
 #include <iostream>
 
-#include <SchemeNode.h>
+#include "DataNodeWrapper.h"
+#include "SchemeNode.h"
+#include "ControlNode.h"
 
 #include "examples/PrintNode.h"
 #include "examples/VariableNode.h"
@@ -48,26 +50,27 @@ std::ostream& operator<<(std::ostream& stream,
   return stream;
 }
 
+#define VAR(type, value) std::make_shared<nds::DataNodeWrapper<nds::ex::VariableNode<type>>>(nds::ex::VariableNode<type>(value));
+#define PRINT(...) std::make_shared<nds::DataNodeWrapper<nds::ex::PrintNode<__VA_ARGS__>>>(nds::ex::PrintNode<__VA_ARGS__>{});
+
 int main() {
-  auto a = std::make_shared<nds::ex::VariableNode<Test>>(Test{});
-  auto b = std::make_shared<nds::ex::VariableNode<float>>(2.2);
-  auto c = std::make_shared<nds::ex::VariableNode<std::string>>("hello");
+  auto a = VAR(Test, Test{});
+  auto b = VAR(float, 2.2);
+  auto c = VAR(std::string, "hello");
 
-  std::shared_ptr<nds::Node> temp;
+  auto d = PRINT(Test, float, std::string);
+  d->connect_input(a, 0, 0);
+  d->connect_input(b, 1, 1);
+  d->connect_input(c, 2, 2);
 
-  nds::ex::PrintNode<Test, float, std::string> d;
-  d.connect_input(a, 0, 0, temp);
-  d.connect_input(b, 1, 1, temp);
-  d.connect_input(c, 2, 2, temp);
-
-  assert(!d.connect_input(a, 0, 1, temp));
+  std::shared_ptr<nds::DataNode> temp;
+  assert(!d->connect_input(a, 0, 1, temp));
 
   try {
-    d.run();
+    d->act();
   } catch (const std::exception& e) {
     std::cout << e.what();
   }
-
 
   return 0;
 }
