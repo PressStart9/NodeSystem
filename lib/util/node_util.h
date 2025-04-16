@@ -24,8 +24,8 @@ struct parse_tuple_impl<std::tuple<TResults...>> {
 template<typename TFunction>
 struct function_signature_impl;
 
-template<typename TResult, typename TClassPart, typename... TArgs>
-struct function_signature_impl<TResult(TClassPart::*)(TArgs...)>
+template<typename TResult, typename... TArgs>
+struct function_signature_impl<TResult(TArgs...)>
 {
   using result_t = TResult;
   using arguments_t = std::tuple<TArgs...>;
@@ -44,6 +44,32 @@ struct is_instantiation_of_impl : std::false_type {};
 
 template<template<typename...> class TType, typename... TArgs>
 struct is_instantiation_of_impl<TType, TType<TArgs...>> : std::true_type {};
+
+template<typename TFunctor>
+struct callable_functor_impl;
+
+template<typename TResult, typename TClassPart, typename... TArgs>
+struct callable_functor_impl<TResult(TClassPart::*)(TArgs...)> {
+  using type = TResult(TArgs...);
+};
+
+template<typename TResult, typename TClassPart, typename... TArgs>
+struct callable_functor_impl<TResult(TClassPart::*)(TArgs...) const> {
+  using type = TResult(TArgs...);
+};
+
+template<typename TCallable>
+struct callable_func_impl;
+
+template<typename TCallable>
+struct callable_func_impl {
+  using type = typename callable_functor_impl<decltype(TCallable::operator())>::type;
+};
+
+template<typename TResult, typename... TArgs>
+struct callable_func_impl<TResult(*)(TArgs...)> {
+  using type = TResult(TArgs...);
+};
 
 }
 
@@ -82,5 +108,7 @@ using make_reference_tuple_t = typename impl::make_reference_tuple_impl<TTuple>:
 template<template<typename...> class TType, typename TSpec>
 inline constexpr bool is_instantiation_of_v = impl::is_instantiation_of_impl<TType, TSpec>::value;
 
+template<typename TCallable>
+using callable_func_t = typename impl::callable_func_impl<TCallable>::type;
 
 } // nds::fun

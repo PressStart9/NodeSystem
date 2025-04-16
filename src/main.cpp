@@ -1,9 +1,7 @@
 #include <cassert>
 #include <iostream>
 
-#include "DataNodeWrapper.h"
-#include "SchemeNode.h"
-#include "ControlNode.h"
+#include "abstract/DataNodeWrapper.h"
 
 #include "examples/PrintNode.h"
 #include "examples/VariableNode.h"
@@ -53,10 +51,15 @@ std::ostream& operator<<(std::ostream& stream,
 #define VAR(type, value) std::make_shared<nds::DataNodeWrapper<nds::ex::VariableNode<type>>>(nds::ex::VariableNode<type>(value));
 #define PRINT(...) std::make_shared<nds::DataNodeWrapper<nds::ex::PrintNode<__VA_ARGS__>>>(nds::ex::PrintNode<__VA_ARGS__>{});
 
+std::string string_variable() {
+  return "hello";
+}
+
 int main() {
   auto a = VAR(Test, Test{});
-  auto b = VAR(float, 2.2);
-  auto c = VAR(std::string, "hello");
+  auto f = []() { return 2.2f; };
+  auto b = std::make_shared<nds::DataNodeWrapper<decltype(f)>>(f);
+  auto c = std::make_shared<nds::DataNodeWrapper<decltype(&string_variable)>>(string_variable);
 
   auto d = PRINT(Test, float, std::string);
   d->connect_input(a, 0, 0);

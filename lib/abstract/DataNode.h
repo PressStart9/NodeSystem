@@ -1,12 +1,6 @@
 #pragma once
 
-#include <any>
-#include <array>
 #include <memory>
-
-#include "util/business_logic_exceptions.h"
-#include "util/node_util.h"
-#include "util/tuple_util.h"
 
 namespace nds {
 
@@ -36,6 +30,10 @@ class DataNode {
   virtual bool connect_input(std::shared_ptr<DataNode> src_node, std::size_t src_index,
     std::size_t dest_index, std::shared_ptr<DataNode>& previous_node) = 0;
 
+  /// @brief Checks if node is already done.
+  /// @return true if node is done, else false.
+  virtual bool is_done() = 0;
+
   /// @brief Deletes result of this node's work.
   virtual void invalidate() = 0;
 
@@ -44,12 +42,6 @@ class DataNode {
 
   /// @brief Gets type id of specific result of work of this node by index.
   virtual size_t get_result_elem_type_id(std::size_t index) = 0;
-
- protected:
-  struct NodeResultPointer {
-    std::shared_ptr<DataNode> node = nullptr;
-    std::size_t index = 0;
-  };
 };
 
 } // nds

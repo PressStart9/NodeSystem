@@ -2,13 +2,16 @@
 
 #include <optional>
 
-#include "Node.h"
+#include "DataNode.h"
+#include "util/node_util.h"
+#include "util/tuple_util.h"
+#include "util/business_logic_exceptions.h"
 
 namespace nds {
 
 /// @brief Default class for data nodes handling.
-/// To introduce new node, you should pass callable object to constructor of this class.
-/// For callable function would be true next statements:
+/// To introduce new node, you should pass functor or lambda to constructor of this class.
+/// @tparam DataFunctor functor that executes as node runs.
 ///   - arguments will be passed from other nodes;
 ///   - result can be passed to other nodes:
 ///     - `std::tuple<TArgs...>` if each element of TArgs must be separate output;
@@ -18,14 +21,20 @@ namespace nds {
 template<typename DataFunctor>
 class DataNodeWrapper : public DataNode {
  public:
-  using func_pointer_t = std::remove_pointer_t<decltype(&DataFunctor::operator())>;
-  using func_result_t = fun::function_result_t<func_pointer_t>;
+  using func_t = fun::callable_func_t<DataFunctor>;
+  using func_result_t = fun::function_result_t<func_t>;
   using result_tuple_t = fun::parse_tuple_t<func_result_t>;
-  using input_tuple_t = fun::function_arguments_t<func_pointer_t>;
+  using input_tuple_t = fun::function_arguments_t<func_t>;
   using reference_tuple_t = fun::make_reference_tuple_t<input_tuple_t>;
 
   explicit DataNodeWrapper(const DataFunctor& functor) : functor_(functor) {}
   explicit DataNodeWrapper(DataFunctor&& functor) : functor_(std::move(functor)) {}
+
+  DataNodeWrapper(const DataNodeWrapper& wrapper) : functor_(wrapper.functor_) {}
+  DataNodeWrapper(DataNodeWrapper&& wrapper) noexcept : functor_(std::move(wrapper.functor_)) {}
+
+  DataNodeWrapper& operator=(const DataNodeWrapper& wrapper) { functor_ = wrapper.functor_; return *this; }
+  DataNodeWrapper& operator=(DataNodeWrapper&& wrapper) noexcept { functor_ = std::move(wrapper.functor_); return *this; }
 
   /// @copydoc DataNode::act
   void act() override {
@@ -47,6 +56,7 @@ class DataNodeWrapper : public DataNode {
   bool connect_input(std::shared_ptr<DataNode> src_node, std::size_t src_index, std::size_t dest_index,
                      std::shared_ptr<DataNode>& previous_node) override {
     previous_node = inputs_[dest_index].node;
+    // TODO: add conversion support
     if (fun::get_tuple_value_type_id<input_tuple_t>(dest_index) != src_node->get_result_elem_type_id(src_index)) {
       return false;
     }
@@ -54,6 +64,11 @@ class DataNodeWrapper : public DataNode {
     inputs_[dest_index].node = src_node;
     inputs_[dest_index].index = src_index;
     return true;
+  }
+
+  /// @copydoc DataNode::is_done
+  bool is_done() override {
+    return result_.has_value();
   }
 
   /// @copydoc DataNode::invalidate
@@ -75,6 +90,11 @@ class DataNodeWrapper : public DataNode {
   }
 
  protected:
+  struct NodeResultPointer {
+    std::shared_ptr<DataNode> node = nullptr;
+    std::size_t index = 0;
+  };
+
   /// @warning Function with side effects for node execution.
   template<typename Tuple>
   Tuple get_node_inputs(const std::array<NodeResultPointer, std::tuple_size_v<Tuple>>& previous_results) {
@@ -94,7 +114,6 @@ class DataNodeWrapper : public DataNode {
         previous_results[Ind].node->get_result_elem(previous_results[Ind].index)))...);
   }
 
- private:
   std::array<NodeResultPointer, std::tuple_size_v<reference_tuple_t>> inputs_;
   std::optional<result_tuple_t> result_;
 
