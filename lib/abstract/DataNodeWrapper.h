@@ -47,15 +47,8 @@ class DataNodeWrapper : public DataNode {
     }
   }
 
-  // TODO: add overload function documentation
-  bool connect_input(std::shared_ptr<DataNode> src_node, std::size_t src_index, std::size_t dest_index) override {
-    std::shared_ptr<DataNode> temp;
-    return connect_input(std::move(src_node), src_index, dest_index, temp);
-  }
-
-  bool connect_input(std::shared_ptr<DataNode> src_node, std::size_t src_index, std::size_t dest_index,
-                     std::shared_ptr<DataNode>& previous_node) override {
-    previous_node = inputs_[dest_index].node;
+  /// @copydoc DataNode::connect_input
+  bool connect_input(DataNode* src_node, std::size_t src_index, std::size_t dest_index) override {
     // TODO: add conversion support
     if (fun::get_tuple_value_type_id<input_tuple_t>(dest_index) != src_node->get_result_elem_type_id(src_index)) {
       return false;
@@ -91,7 +84,7 @@ class DataNodeWrapper : public DataNode {
 
  protected:
   struct NodeResultPointer {
-    std::shared_ptr<DataNode> node = nullptr;
+    DataNode* node = nullptr;
     std::size_t index = 0;
   };
 

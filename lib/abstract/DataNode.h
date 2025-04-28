@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 namespace nds {
 
 /// @brief Abstract class for data nodes.
@@ -19,16 +17,7 @@ class DataNode {
   /// @param src_index index of output in src_node.
   /// @param dest_index index of input in this node.
   /// @return true if types of input and output are same and indexes are correct, else false.
-  virtual bool connect_input(std::shared_ptr<DataNode> src_node, std::size_t src_index, std::size_t dest_index) = 0;
-
-  /// @brief Connects output of other node to input of this node.
-  /// @param src_node node whose result will be connected.
-  /// @param src_index index of output in src_node.
-  /// @param dest_index index of input in this node.
-  /// @param previous_node variable of pointer to node which will be set to previous node pointer.
-  /// @return true if types of input and output are same and indexes are correct, else false.
-  virtual bool connect_input(std::shared_ptr<DataNode> src_node, std::size_t src_index,
-    std::size_t dest_index, std::shared_ptr<DataNode>& previous_node) = 0;
+  virtual bool connect_input(DataNode* src_node, std::size_t src_index, std::size_t dest_index) = 0;
 
   /// @brief Checks if node is already done.
   /// @return true if node is done, else false.

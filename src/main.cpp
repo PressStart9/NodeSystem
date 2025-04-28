@@ -1,5 +1,6 @@
 #include <cassert>
 #include <iostream>
+#include <memory>
 
 #include "abstract/DataNodeWrapper.h"
 
@@ -48,8 +49,8 @@ std::ostream& operator<<(std::ostream& stream,
   return stream;
 }
 
-#define VAR(type, value) std::make_shared<nds::DataNodeWrapper<nds::ex::VariableNode<type>>>(nds::ex::VariableNode<type>(value));
-#define PRINT(...) std::make_shared<nds::DataNodeWrapper<nds::ex::PrintNode<__VA_ARGS__>>>(nds::ex::PrintNode<__VA_ARGS__>{});
+#define VAR(type, value) new nds::DataNodeWrapper<nds::ex::VariableNode<type>>(nds::ex::VariableNode<type>(value));
+#define PRINT(...) new nds::DataNodeWrapper<nds::ex::PrintNode<__VA_ARGS__>>(nds::ex::PrintNode<__VA_ARGS__>{});
 
 std::string string_variable() {
   return "hello";
@@ -58,16 +59,15 @@ std::string string_variable() {
 int main() {
   auto a = VAR(Test, Test{});
   auto f = []() { return 2.2f; };
-  auto b = std::make_shared<nds::DataNodeWrapper<decltype(f)>>(f);
-  auto c = std::make_shared<nds::DataNodeWrapper<decltype(&string_variable)>>(string_variable);
+  auto b = new nds::DataNodeWrapper(f);
+  auto c = new nds::DataNodeWrapper<decltype(&string_variable)>(string_variable);
 
   auto d = PRINT(Test, float, std::string);
   d->connect_input(a, 0, 0);
   d->connect_input(b, 1, 1);
   d->connect_input(c, 2, 2);
 
-  std::shared_ptr<nds::DataNode> temp;
-  assert(!d->connect_input(a, 0, 1, temp));
+  assert(!d->connect_input(a, 0, 1));
 
   try {
     d->act();
