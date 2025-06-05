@@ -3,9 +3,9 @@
 #include <optional>
 
 #include "DataNode.h"
+#include "util/business_logic_exceptions.h"
 #include "util/node_util.h"
 #include "util/tuple_util.h"
-#include "util/business_logic_exceptions.h"
 
 namespace nds {
 
@@ -33,8 +33,8 @@ class DataNodeWrapper : public DataNode {
   DataNodeWrapper(const DataNodeWrapper& wrapper) : functor_(wrapper.functor_) {}
   DataNodeWrapper(DataNodeWrapper&& wrapper) noexcept : functor_(std::move(wrapper.functor_)) {}
 
-  DataNodeWrapper& operator=(const DataNodeWrapper& wrapper) { functor_ = wrapper.functor_; return *this; }
-  DataNodeWrapper& operator=(DataNodeWrapper&& wrapper) noexcept { functor_ = std::move(wrapper.functor_); return *this; }
+  DataNodeWrapper& operator=(const DataNodeWrapper& wrapper) = delete;
+  DataNodeWrapper& operator=(DataNodeWrapper&& wrapper) noexcept = delete;
 
   /// @copydoc DataNode::act
   void act() override {
@@ -57,6 +57,14 @@ class DataNodeWrapper : public DataNode {
     inputs_[dest_index].node = src_node;
     inputs_[dest_index].index = src_index;
     return true;
+  }
+
+  DataFunctor& get_functor() {
+    return functor_;
+  }
+
+  const DataFunctor& get_functor() const {
+    return functor_;
   }
 
   /// @copydoc DataNode::is_done

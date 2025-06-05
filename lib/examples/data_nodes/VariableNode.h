@@ -12,6 +12,11 @@ class VariableNode {
     return {var_};
   }
 
+  void set_value(const T& value) { var_ = value; }
+  void set_value(T&& value) { var_ = value; }
+
+  const T& get_value() const { return var_; }
+
  private:
   T var_;
 };

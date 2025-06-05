@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 namespace nds::ex {
 
 template<typename... Args>

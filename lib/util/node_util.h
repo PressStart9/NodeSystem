@@ -71,7 +71,7 @@ struct callable_func_impl<TResult(*)(TArgs...)> {
   using type = TResult(TArgs...);
 };
 
-}
+} // impl
 
 /// @brief Transform type into tuple.
 /// For std::tuple<TArgs...> it does nothing.

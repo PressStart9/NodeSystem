@@ -9,7 +9,7 @@ class DataNode {
 
   /// @brief Starts execution of node.
   /// All inputs of current node must be connected with outputs of other nodes.
-  /// If an input of this node need a result of another node's work, recursively runs other node's execution.
+  /// If an input of this node need a result of another node's work and it's not already computed, recursively runs other data node's execution.
   virtual void act() = 0;
 
   /// @brief Connects output of other node to input of this node.
