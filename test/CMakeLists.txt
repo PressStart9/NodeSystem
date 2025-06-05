@@ -10,11 +10,13 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 
 add_executable(node_tests
-        node_test.cpp
+        data_node_test.cpp
 )
 
-target_link_libraries(node_tests
+target_link_libraries(node_tests PRIVATE
+        GTest::gtest
         GTest::gtest_main
+        node_system
 )
 
 include(GoogleTest)
