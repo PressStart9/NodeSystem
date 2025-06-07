@@ -5,8 +5,8 @@
 
 #include "CheckNode.h"
 
-#define VAR(type, value) new nds::DataNodeWrapper<nds::ex::VariableNode<type>>(nds::ex::VariableNode<type>(value));
-#define CHECK(...) new nds::DataNodeWrapper(nds::ex::CheckNode{__VA_ARGS__});
+#define VAR(type, value) nds::DataNodeWrapper<nds::ex::VariableNode<type>>(nds::ex::VariableNode<type>(value))
+#define CHECK(...) nds::DataNodeWrapper(nds::ex::CheckNode{__VA_ARGS__})
 
 struct CallCounter {
   CallCounter() {

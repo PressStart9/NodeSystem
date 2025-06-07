@@ -19,6 +19,10 @@ class DataNode {
   /// @return true if types of input and output are same and indexes are correct, else false.
   virtual bool connect_input(DataNode* src_node, std::size_t src_index, std::size_t dest_index) = 0;
 
+  /// @brief Get count of outputs of node.
+  /// @return size of outputs array.
+  virtual size_t outputs_size() const = 0;
+
   /// @brief Checks if node is already done.
   /// @return true if node is done, else false.
   virtual bool is_done() = 0;

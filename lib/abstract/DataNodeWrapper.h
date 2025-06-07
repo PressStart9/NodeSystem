@@ -50,13 +50,18 @@ class DataNodeWrapper : public DataNode {
   /// @copydoc DataNode::connect_input
   bool connect_input(DataNode* src_node, std::size_t src_index, std::size_t dest_index) override {
     // TODO: add conversion support
-    if (fun::get_tuple_value_type_id<input_tuple_t>(dest_index) != src_node->get_result_elem_type_id(src_index)) {
+    if (dest_index >= inputs_.size() ||
+        src_index >= src_node->outputs_size() ||
+        fun::get_tuple_value_type_id<input_tuple_t>(dest_index) != src_node->get_result_elem_type_id(src_index)) {
       return false;
     }
-    invalidate();
     inputs_[dest_index].node = src_node;
     inputs_[dest_index].index = src_index;
     return true;
+  }
+
+  size_t outputs_size() const override {
+    return std::tuple_size_v<result_tuple_t>;
   }
 
   DataFunctor& get_functor() {
