@@ -1,14 +1,9 @@
-#include <gtest/gtest.h>
-
 #include <memory>
 
 #include "util/util.h"
 
-#include "abstract/DataNodeWrapper.h"
-#include "examples/data_nodes/VariableNode.h"
 
-
-CALL_COUNTER_STATIC_INIT(DataNodeTests)
+RESET_CALL_COUNTER_EACH_TEST(DataNodeTests)
 
 using namespace nds;
 
@@ -29,7 +24,7 @@ auto addition_lambda = [](const int& a, const int& b) {
 };
 
 TEST_F(DataNodeTests, DefaultTest) {
-  auto a = VAR(CallCounter, CallCounter{});
+  auto a = CONST(CallCounter, CallCounter{});
   auto f = []() { return 2.2f; };
   auto b = nds::DataNodeWrapper(f);
   auto c = nds::DataNodeWrapper(&variable_function);
@@ -54,28 +49,28 @@ TEST_F(DataNodeTests, DefaultTest) {
 
 TEST_F(DataNodeTests, SuccessfulConnectTest) {
   auto a = CHECK(0, CallCounter());
-  auto b = VAR(int, 0);
+  auto b = CONST(int, 0);
 
   ASSERT_TRUE(a.connect_input(&b, 0, 0));
 }
 
 TEST_F(DataNodeTests, TypeMismatchConnectTest) {
   auto a = CHECK(0.f, CallCounter());
-  auto b = VAR(int, 0);
+  auto b = CONST(int, 0);
 
   ASSERT_FALSE(a.connect_input(&b, 0, 0));
 }
 
 TEST_F(DataNodeTests, DestinationOutOfRangeConnectTest) {
   auto a = CHECK(0, CallCounter());
-  auto b = VAR(int, 0);
+  auto b = CONST(int, 0);
 
   ASSERT_FALSE(a.connect_input(&b, 0, 2));
 }
 
 TEST_F(DataNodeTests, SourceOutOfRangeConnectTest) {
   auto a = CHECK(0, CallCounter());
-  auto b = VAR(int, 0);
+  auto b = CONST(int, 0);
 
   ASSERT_FALSE(a.connect_input(&b, 1, 0));
 }
@@ -88,7 +83,7 @@ TEST_F(DataNodeTests, NoInputTest) {
 
 TEST_F(DataNodeTests, NoAnyInputTest) {
   auto a = CHECK(0, CallCounter());
-  auto b = VAR(int, 0);
+  auto b = CONST(int, 0);
 
   a.connect_input(&b, 0, 0);
 
@@ -96,8 +91,8 @@ TEST_F(DataNodeTests, NoAnyInputTest) {
 }
 
 TEST_F(DataNodeTests, FunctorAdditionTest) {
-  auto a = VAR(int, 5);
-  auto b = VAR(int, 7);
+  auto a = CONST(int, 5);
+  auto b = CONST(int, 7);
   
   auto c = DataNodeWrapper(addition_functor{});
   c.connect_input(&a, 0, 0);
@@ -109,8 +104,8 @@ TEST_F(DataNodeTests, FunctorAdditionTest) {
 }
 
 TEST_F(DataNodeTests, FunctionAdditionTest) {
-  auto a = VAR(int, 5);
-  auto b = VAR(int, 7);
+  auto a = CONST(int, 5);
+  auto b = CONST(int, 7);
   
   auto c = DataNodeWrapper(&addition_function);
   c.connect_input(&a, 0, 0);
@@ -122,8 +117,8 @@ TEST_F(DataNodeTests, FunctionAdditionTest) {
 }
 
 TEST_F(DataNodeTests, LambdaAdditionTest) {
-  auto a = VAR(int, 5);
-  auto b = VAR(int, 7);
+  auto a = CONST(int, 5);
+  auto b = CONST(int, 7);
   
   auto c = DataNodeWrapper(addition_lambda);
   c.connect_input(&a, 0, 0);
@@ -137,7 +132,7 @@ TEST_F(DataNodeTests, LambdaAdditionTest) {
 TEST_F(DataNodeTests, SequencePassTest) {
   constexpr int chain_size = 10;
 
-  auto a = std::make_shared<DataNodeWrapper<ex::VariableNode<CallCounter>>>(ex::VariableNode(CallCounter()));
+  auto a = std::make_shared<DataNodeWrapper<ex::ConstantNode<CallCounter>>>(ex::ConstantNode(CallCounter()));
 
   auto lam = [](const CallCounter& cc){ return cc; };
   

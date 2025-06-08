@@ -11,6 +11,7 @@ enable_testing()
 
 add_executable(node_tests
         data_node_test.cpp
+        control_node_test.cpp
 )
 
 target_link_libraries(node_tests PRIVATE

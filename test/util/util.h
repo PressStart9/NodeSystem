@@ -1,11 +1,19 @@
 #pragma once
 
+#include <gtest/gtest.h>
+
 #include <cstdint>
 #include <iostream>
 
+#include "abstract/DataNode.h"
+#include "abstract/DataNodeWrapper.h"
+#include "abstract/ControlNode.h"
+#include "abstract/ControlNodeWrapper.h"
+#include "examples/data_nodes/ConstantNode.h"
+
 #include "CheckNode.h"
 
-#define VAR(type, value) nds::DataNodeWrapper<nds::ex::VariableNode<type>>(nds::ex::VariableNode<type>(value))
+#define CONST(type, value) nds::DataNodeWrapper<nds::ex::ConstantNode<type>>(nds::ex::ConstantNode<type>(value))
 #define CHECK(...) nds::DataNodeWrapper(nds::ex::CheckNode{__VA_ARGS__})
 
 struct CallCounter {
@@ -49,17 +57,31 @@ struct CallCounter {
 
   bool operator==(const CallCounter&) const { return true; }
 
-  static size_t construct_count;
-  static size_t copy_construct_count;
-  static size_t move_construct_count;
-  static size_t copy_assign_count;
-  static size_t move_assign_count;
-  static size_t destruct_count;
+  friend std::ostream& operator<<(std::ostream& stream, const CallCounter&) {
+    stream << "CallCounter{\n\tconstruct_count: " << CallCounter::construct_count <<
+      ",\n\tcopy_construct_count: " << CallCounter::copy_construct_count <<
+      ",\n\tmove_construct_count: " << CallCounter::move_construct_count <<
+      ",\n\tcopy_assign_count: " << CallCounter::copy_assign_count <<
+      ",\n\tmove_assign_count: " << CallCounter::move_assign_count <<
+      ",\n\tdestruct_count: " << CallCounter::destruct_count <<
+      ",\n\tnew_count: " << CallCounter::new_count <<
+      ",\n\tnew_array_count: " << CallCounter::new_array_count <<
+      ",\n\tdelete_count: " << CallCounter::delete_count <<
+      ",\n\tdelete_array_count: " << CallCounter::delete_array_count << "\n}";
+    return stream;
+  }
 
-  static size_t new_count;
-  static size_t new_array_count;
-  static size_t delete_count;
-  static size_t delete_array_count;
+  inline static size_t construct_count;
+  inline static size_t copy_construct_count;
+  inline static size_t move_construct_count;
+  inline static size_t copy_assign_count;
+  inline static size_t move_assign_count;
+  inline static size_t destruct_count;
+
+  inline static size_t new_count;
+  inline static size_t new_array_count;
+  inline static size_t delete_count;
+  inline static size_t delete_array_count;
 
   static void reset_count() {
     construct_count = 0;
@@ -76,34 +98,8 @@ struct CallCounter {
   }
 };
 
-std::ostream& operator<<(std::ostream& stream, const CallCounter&) {
-  stream << "CallCounter{\n\tconstruct_count: " << CallCounter::construct_count <<
-    ",\n\tcopy_construct_count: " << CallCounter::copy_construct_count <<
-    ",\n\tmove_construct_count: " << CallCounter::move_construct_count <<
-    ",\n\tcopy_assign_count: " << CallCounter::copy_assign_count <<
-    ",\n\tmove_assign_count: " << CallCounter::move_assign_count <<
-    ",\n\tdestruct_count: " << CallCounter::destruct_count <<
-    ",\n\tnew_count: " << CallCounter::new_count <<
-    ",\n\tnew_array_count: " << CallCounter::new_array_count <<
-    ",\n\tdelete_count: " << CallCounter::delete_count <<
-    ",\n\tdelete_array_count: " << CallCounter::delete_array_count << "\n}";
-  return stream;
-}
-
-#define CALL_COUNTER_STATIC_INIT(fixture) \
-size_t CallCounter::construct_count = 0; \
-size_t CallCounter::copy_construct_count = 0; \
-size_t CallCounter::move_construct_count = 0; \
-size_t CallCounter::copy_assign_count = 0; \
-size_t CallCounter::move_assign_count = 0; \
-size_t CallCounter::destruct_count = 0; \
- \
-size_t CallCounter::new_count = 0; \
-size_t CallCounter::new_array_count = 0; \
-size_t CallCounter::delete_count = 0; \
-size_t CallCounter::delete_array_count = 0; \
- \
-class DataNodeTests : public ::testing::Test { \
+#define RESET_CALL_COUNTER_EACH_TEST(fixture) \
+class fixture : public ::testing::Test { \
  protected: \
   void SetUp() override { \
     CallCounter::reset_count(); \

@@ -3,6 +3,7 @@
 #include <tuple>
 
 #include "ControlNode.h"
+#include "DataNodeWrapper.h"
 #include "util/node_util.h"
 
 namespace nds {
