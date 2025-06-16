@@ -11,7 +11,7 @@ template<typename... Args>
 class CheckNode {
  public:
   explicit CheckNode(Args&&... expected_args)
-    : expected_args_(std::forward<Args>(expected_args)...) {}
+    : expected_args_(std::move(expected_args)...) {}
 
   void operator()(const Args&... actual_args) {
     checkArguments(std::index_sequence_for<Args...>{}, actual_args...);

@@ -31,12 +31,22 @@ struct function_signature_impl<TResult(TArgs...)>
   using arguments_t = std::tuple<TArgs...>;
 };
 
+template <typename Argument>
+struct ref_or_left_impl {
+  using type = Argument;
+};
+
+template <typename Argument>
+struct ref_or_left_impl<Argument&> {
+  using type = std::reference_wrapper<Argument>;
+};
+
 template <typename Tuple>
 struct make_reference_tuple_impl;
 
 template <typename... TArguments>
 struct make_reference_tuple_impl<std::tuple<TArguments...>> {
-  using type = std::tuple<std::reference_wrapper<std::remove_cv_t<std::remove_reference_t<TArguments>>>...>;
+  using type = std::tuple<typename ref_or_left_impl<TArguments>::type...>;
 };
 
 template<template<typename...> class TType, typename TSpec>
@@ -63,7 +73,7 @@ struct callable_func_impl;
 
 template<typename TCallable>
 struct callable_func_impl {
-  using type = typename callable_functor_impl<decltype(TCallable::operator())>::type;
+  using type = typename callable_functor_impl<decltype(std::decay_t<TCallable>::operator())>::type;
 };
 
 template<typename TResult, typename... TArgs>
@@ -88,13 +98,16 @@ using function_result_t = typename impl::function_signature_impl<TFunction>::res
 template<typename TFunction>
 using function_arguments_t = typename impl::function_signature_impl<TFunction>::arguments_t;
 
-/// @brief Transform tuple's arguments into reference wrapper.
-/// Transform drops const, volatile and reference qualifiers.
+/// @brief Transforms references to `std::reference_wrapper`.
+template<typename TArgument>
+using ref_or_left_t = typename impl::ref_or_left_impl<TArgument>::type;
+
+/// @brief Transform tuple's arguments with reference into reference wrapper.
 /// Usage example:
 /// @code
 /// std::is_same_v<
-///   nds::fun::make_reference_tuple_t<std::tuple<int, const float, std::string&>>,
-///   std::tuple<std::reference_wrapper<int>, std::reference_wrapper<float>, std::reference_wrapper<std::string>>>
+///   nds::fun::make_reference_tuple_t<std::tuple<int, const float&, std::string&>>,
+///   std::tuple<int, std::reference_wrapper<const float>, std::reference_wrapper<std::string>>>
 ///   == true
 /// @endcode
 template<typename TTuple>

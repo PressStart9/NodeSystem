@@ -3,12 +3,12 @@
 namespace nds::ex {
 
 template<typename T>
-class ConstantNode {
+class VariableNode {
  public:
-  explicit ConstantNode(const T& value) : var_(value) {}
-  explicit ConstantNode(T&& value) : var_(std::move(value)) {}
+  explicit VariableNode(const T& default_value) : var_(default_value) {}
+  explicit VariableNode(T&& default_value) : var_(std::move(default_value)) {}
 
-  const T& operator()() {
+  T& operator()() {
     return var_;
   }
 

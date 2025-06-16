@@ -29,6 +29,9 @@ TEST_F(DataNodeTests, DefaultTest) {
   auto b = nds::DataNodeWrapper(f);
   auto c = nds::DataNodeWrapper(&variable_function);
 
+  b.act();
+  std::cout << *reinterpret_cast<float*>(b.get_result_elem(0)) << '\n';
+
   auto d = CHECK(CallCounter(), 2.2f, std::string("string"));
   d.connect_input(&a, 0, 0);
   d.connect_input(&b, 0, 1);
@@ -38,7 +41,7 @@ TEST_F(DataNodeTests, DefaultTest) {
 
   d.act();
 
-  ASSERT_EQ(1, CallCounter::copy_construct_count);
+  ASSERT_EQ(0, CallCounter::copy_construct_count);
   ASSERT_EQ(0, CallCounter::copy_assign_count);
 
   ASSERT_EQ(0, CallCounter::delete_count);
@@ -134,7 +137,7 @@ TEST_F(DataNodeTests, SequencePassTest) {
 
   auto a = std::make_shared<DataNodeWrapper<ex::ConstantNode<CallCounter>>>(ex::ConstantNode(CallCounter()));
 
-  auto lam = [](const CallCounter& cc){ return cc; };
+  auto lam = [](const CallCounter& cc) -> const CallCounter& { return cc; };
   
   auto chain = std::array<std::shared_ptr<DataNode>, chain_size>({a});
   for (int i = 1; i < chain_size; ++i) {
@@ -146,7 +149,7 @@ TEST_F(DataNodeTests, SequencePassTest) {
   b.connect_input(chain.back().get(), 0, 0);
   b.act();
 
-  ASSERT_EQ(chain_size, CallCounter::copy_construct_count); // each node saves result as copy
+  ASSERT_EQ(0, CallCounter::copy_construct_count);
   ASSERT_EQ(0, CallCounter::copy_assign_count);
   ASSERT_EQ(0, CallCounter::move_assign_count);
 
@@ -154,6 +157,8 @@ TEST_F(DataNodeTests, SequencePassTest) {
   ASSERT_EQ(0, CallCounter::new_array_count);
   ASSERT_EQ(0, CallCounter::delete_count);
   ASSERT_EQ(0, CallCounter::delete_array_count);
+
+  ASSERT_EQ(CallCounter::move_construct_count, CallCounter::destruct_count);
 
   std::cout << CallCounter();
 }

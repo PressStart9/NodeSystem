@@ -10,10 +10,12 @@
 #include "abstract/ControlNode.h"
 #include "abstract/ControlNodeWrapper.h"
 #include "examples/data_nodes/ConstantNode.h"
+#include "examples/data_nodes/VariableNode.h"
 
 #include "CheckNode.h"
 
 #define CONST(type, value) nds::DataNodeWrapper<nds::ex::ConstantNode<type>>(nds::ex::ConstantNode<type>(value))
+#define VAR(type, value) nds::DataNodeWrapper<nds::ex::VariableNode<type>>(nds::ex::VariableNode<type>(value))
 #define CHECK(...) nds::DataNodeWrapper(nds::ex::CheckNode{__VA_ARGS__})
 
 struct CallCounter {

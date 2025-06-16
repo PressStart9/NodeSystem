@@ -2,6 +2,25 @@
 
 namespace nds {
 
+/// @brief Runtime information about type.
+struct ElementTypeInfo {
+  /// @brief Unique for each type.
+  const size_t type_hash;
+
+  const bool is_const : 1;
+  const bool is_volatile : 1;
+  const bool is_reference : 1;
+  const bool is_copy_constructible : 1;
+
+  /// @brief Check if this type can be reinterpret as another.
+  bool implies(const ElementTypeInfo& info) const {
+    return type_hash == info.type_hash && (
+        (!info.is_reference && info.is_copy_constructible) || // can drop qualifiers after making copy
+        ((!is_const || info.is_const) && (!is_volatile || info.is_volatile)) // implication prevent dropping qualifier when using references
+      );
+  }
+};
+
 /// @brief Abstract class for data nodes.
 class DataNode {
  public:
@@ -16,7 +35,7 @@ class DataNode {
   /// @param src_node node whose result will be connected.
   /// @param src_index index of output in src_node.
   /// @param dest_index index of input in this node.
-  /// @return true if types of input and output are same and indexes are correct, else false.
+  /// @return true if plain types of input and output are same (without any qualifiers), connection doesn't drops const and indexes are in bounds, else false.
   virtual bool connect_input(DataNode* src_node, std::size_t src_index, std::size_t dest_index) = 0;
 
   /// @brief Get count of outputs of node.
@@ -33,8 +52,8 @@ class DataNode {
   /// @brief Gets specific result of work of this node by index.
   virtual void* get_result_elem(std::size_t index) = 0;
 
-  /// @brief Gets type id of specific result of work of this node by index.
-  virtual size_t get_result_elem_type_id(std::size_t index) = 0;
+  /// @brief Gets type info of specific result of work of this node by index.
+  virtual ElementTypeInfo get_result_elem_type_info(std::size_t index) = 0;
 };
 
 } // nds
