@@ -42,9 +42,9 @@ class DataNodeWrapper : public DataNode {
     if constexpr (std::is_same_v<void, func_result_t>) {
       std::apply(functor_, get_node_inputs());
     } else if constexpr (nds::fun::is_instantiation_of_v<std::tuple, func_result_t>) {
-      result_ = std::apply(functor_, get_node_inputs());
+      result_.emplace(std::apply(functor_, get_node_inputs()));
     } else {
-      result_ = std::make_tuple<std::tuple_element_t<0, result_reference_tuple_t>>(std::apply(functor_, get_node_inputs()));
+      result_.emplace(std::apply(functor_, get_node_inputs()));
     }
   }
 
@@ -81,7 +81,7 @@ class DataNodeWrapper : public DataNode {
 
   /// @copydoc DataNode::invalidate
   void invalidate() override {
-    result_ = {};
+    result_.reset();
   }
 
   /// @copydoc DataNode::get_result_elem
