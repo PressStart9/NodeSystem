@@ -16,7 +16,7 @@ struct ElementTypeInfo {
   bool implies(const ElementTypeInfo& info) const {
     return type_hash == info.type_hash && (
         (!info.is_reference && info.is_copy_constructible) || // can drop qualifiers after making copy
-        ((!is_const || info.is_const) && (!is_volatile || info.is_volatile)) // implication prevent dropping qualifier when using references
+        (info.is_reference && (!is_const || info.is_const) && (!is_volatile || info.is_volatile)) // implication prevent dropping qualifier when using references
       );
   }
 };

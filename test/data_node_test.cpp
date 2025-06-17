@@ -162,3 +162,12 @@ TEST_F(DataNodeTests, SequencePassTest) {
 
   std::cout << CallCounter();
 }
+
+TEST_F(DataNodeTests, DroppingConstTest) {
+  auto const_node = DataNodeWrapper([]() -> const int { return 0; });
+  int i = 0; auto const_ref_node = DataNodeWrapper([&i]() -> const int& { return i; });
+  auto ref_pass = DataNodeWrapper([](int& i){});
+
+  ASSERT_FALSE(ref_pass.connect_input(&const_node, 0, 0));
+  ASSERT_FALSE(ref_pass.connect_input(&const_ref_node, 0, 0));
+}
