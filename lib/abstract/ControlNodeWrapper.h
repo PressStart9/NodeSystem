@@ -28,7 +28,7 @@ class ControlNodeWrapper : public ControlNode {
  public:
   using decay_control_functor_t = ControlFunctor;
   using func_t = fun::callable_func_t<decay_control_functor_t>;
-  static constexpr size_t branches_count = decay_control_functor_t::size;
+  static constexpr size_t branches_count = fun::parse_size_v<decay_control_functor_t>;
 
   template<typename CF, typename DF>
   explicit ControlNodeWrapper(CF&& functor, DF&& inner_node) : functor_(std::forward<CF>(functor)), inner_functor_(std::forward<DF>(inner_node)) {}

@@ -81,6 +81,21 @@ struct callable_func_impl<TResult(*)(TArgs...)> {
   using type = TResult(TArgs...);
 };
 
+template<typename T, typename = void>
+struct parse_size_impl;
+
+template<typename Functor>
+struct parse_size_impl<Functor, std::enable_if_t<!std::is_function_v<Functor>>> {
+    static constexpr size_t value = Functor::size;
+};
+
+template<typename Function>
+struct parse_size_impl<Function, std::enable_if_t<std::is_function_v<Function>>> {
+    using callable_t = typename callable_func_impl<Function>::type;
+    using arguments_t = typename function_signature_impl<callable_t>::arguments_t;
+    static constexpr size_t value = std::tuple_size_v<std::tuple_element_t<1, arguments_t>>;
+};
+
 } // impl
 
 /// @brief Transform type into tuple.
@@ -89,6 +104,10 @@ struct callable_func_impl<TResult(*)(TArgs...)> {
 /// For other types T it is std::tuple<T>.
 template<typename TType>
 using parse_tuple_t = typename impl::parse_tuple_impl<TType>::result_t;
+
+/// @brief Parse size from functor `using` or from `std::integral_constant` from function signature.
+template<typename TType>
+static constexpr size_t parse_size_v = impl::parse_size_impl<TType>::value;
 
 /// @brief Type of member function result.
 template<typename TFunction>
