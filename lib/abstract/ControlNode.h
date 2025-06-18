@@ -27,9 +27,12 @@ class ControlNode {
   /// @return node that must be run after this. nullptr if this is end point.
   virtual ControlInfo run() = 0;
 
-  /// @brief Transfers control over node execution to node chain starting ath this one.
+  /// @brief Transfers control over node execution to node chain starting at this one.
   /// Automatically calls next node if it exists.
   virtual void start() = 0;
+
+  /// @brief Get inner data node. 
+  virtual DataNode* get_data_node() = 0;
 
   /// @brief Connects node to one of branches of this node.
   /// @param dest_node node that can be run after running this node.

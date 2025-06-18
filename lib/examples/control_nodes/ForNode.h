@@ -8,10 +8,10 @@ namespace nds::ex {
 
 class ForNode {
  public:
+  static constexpr size_t size = 1;
+
   BranchInfo operator()(DataNodeWrapper<CounterNode>* node) const {
-    BranchInfo result = {0, node->get_functor().done(), true};
-    node->get_functor()();
-    return result;
+    return {0, node->get_functor().done(), true};
   }
 };
 

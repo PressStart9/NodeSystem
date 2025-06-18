@@ -9,26 +9,25 @@
 #include "examples/data_nodes/ConstantNode.h"
 #include "examples/data_nodes/VariableNode.h"
 #include "examples/data_nodes/PrintNode.h"
+#include "examples/data_nodes/CounterNode.h"
+#include "examples/control_nodes/LinearNode.h"
+#include "examples/control_nodes/ForNode.h"
+#include "examples/control_nodes/BranchNode.h"
 
-#define CONST(type, value) nds::DataNodeWrapper<nds::ex::ConstantNode<type>>(nds::ex::ConstantNode<type>(value))
-#define VAR(type, value) nds::DataNodeWrapper<nds::ex::VariableNode<type>>(nds::ex::VariableNode<type>(value))
+#define CONST(type, value) nds::DataNodeWrapper(nds::ex::ConstantNode<type>(value))
+#define VAR(type, value) nds::DataNodeWrapper(nds::ex::VariableNode<type>(value))
 #define PRINT(...) nds::DataNodeWrapper(nds::ex::PrintNode<__VA_ARGS__>())
 
-int addition_function(const int& a, const int& b) {
-  return a + b;
-}
-
 int main() {
-  auto a = CONST(int, 5);
-  auto b = CONST(int, 7);
-  
-  auto c = nds::DataNodeWrapper(&addition_function);
-  c.connect_input(&a, 0, 0);
-  c.connect_input(&b, 0, 1);
-  
-  auto d = PRINT(int);
-  d.connect_input(&c, 0, 0);
-  d.act();
+  std::cout << std::boolalpha << std::endl;
+
+  auto a = nds::ControlNodeWrapper(nds::ex::ForNode(), nds::DataNodeWrapper(nds::ex::CounterNode(10)));
+  auto b = nds::ControlNodeWrapper(nds::ex::LinearNode<decltype(PRINT(size_t))::decay_data_functor_t>(), PRINT(size_t));
+
+  b.get_data_node()->connect_input(a.get_data_node(), 0, 0);
+  a.connect_next(&b, 0);
+
+  a.start();
 
   return 0;
 }

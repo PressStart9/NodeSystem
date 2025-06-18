@@ -21,15 +21,16 @@ namespace nds {
 template<typename DataFunctor>
 class DataNodeWrapper : public DataNode {
  public:
-  using decay_data_functor_t = std::decay_t<DataFunctor>;
+  using decay_data_functor_t = DataFunctor;
   using func_t = fun::callable_func_t<decay_data_functor_t>;
   using func_result_t = fun::function_result_t<func_t>;
   using result_tuple_t = fun::parse_tuple_t<func_result_t>;
   using result_reference_tuple_t = fun::make_reference_tuple_t<result_tuple_t>;
   using input_tuple_t = fun::function_arguments_t<func_t>;
 
-  explicit DataNodeWrapper(const DataFunctor& functor) : functor_(functor) {}
-  explicit DataNodeWrapper(DataFunctor&& functor) : functor_(std::move(functor)) {}
+  template<typename DF,
+    std::enable_if_t<!std::is_same_v<std::decay<DF>, DataNodeWrapper>>* = nullptr>
+  explicit DataNodeWrapper(DF&& functor) : functor_(std::forward<DF>(functor)) {}
 
   DataNodeWrapper(const DataNodeWrapper& wrapper) : functor_(wrapper.functor_) {}
   DataNodeWrapper(DataNodeWrapper&& wrapper) noexcept : functor_(std::move(wrapper.functor_)) {}
@@ -130,5 +131,9 @@ class DataNodeWrapper : public DataNode {
 
   decay_data_functor_t functor_;
 };
+
+// Deduction guide
+template<typename DF>
+DataNodeWrapper(DF&&) -> DataNodeWrapper<std::decay_t<DF>>;
 
 } // nds
