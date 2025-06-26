@@ -37,7 +37,8 @@ class ControlNode {
   /// @brief Connects node to one of branches of this node.
   /// @param dest_node node that can be run after running this node.
   /// @param src_index index of branch.
-  virtual void connect_next(ControlNode* dest_node, size_t src_index) = 0;
+  /// @return `false` if src_index is out of range.
+  virtual bool connect_next(ControlNode* dest_node, size_t src_index) = 0;
 };
 
 } // nds

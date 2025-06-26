@@ -116,11 +116,6 @@ class DataNodeWrapper : public DataNode {
     if ((... || (inputs_[Ind].node == nullptr))) {
       throw exc::no_source_error();
     }
-    // if constexpr (sizeof...(Ind) > 0) {
-    //   auto test1 = inputs_[0].node->get_result_elem(inputs_[0].index);
-    //   auto test = reinterpret_cast<fun::ref_or_left_t<std::tuple_element_t<0, input_reference_tuple_t>>*>(test1);
-    //   auto test2 = *test;
-    // }
     return std::make_tuple(
       std::ref(*reinterpret_cast<std::remove_reference_t<std::tuple_element_t<Ind, input_tuple_t>>*>(
         inputs_[Ind].node->get_result_elem(inputs_[Ind].index)))...);

@@ -11,6 +11,13 @@
 #include "abstract/ControlNodeWrapper.h"
 #include "examples/data_nodes/ConstantNode.h"
 #include "examples/data_nodes/VariableNode.h"
+#include "examples/data_nodes/SumNode.h"
+#include "examples/data_nodes/EmptyNode.h"
+#include "examples/data_nodes/SetNode.h"
+#include "examples/control_nodes/LinearNode.h"
+#include "examples/control_nodes/ForNode.h"
+#include "examples/control_nodes/BranchNode.h"
+#include "examples/control_nodes/SequentialNode.h"
 
 #include "CheckNode.h"
 

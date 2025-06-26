@@ -10,7 +10,7 @@ class ForNode {
  public:
   static constexpr size_t size = 1;
 
-  BranchInfo operator()(DataNodeWrapper<CounterNode>* node) const {
+  BranchInfo operator()(DataNodeWrapper<CounterNode<size_t>>* node) const {
     return {0, node->get_functor().done(), true};
   }
 };

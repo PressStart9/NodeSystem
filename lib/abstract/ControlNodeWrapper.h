@@ -53,11 +53,11 @@ class ControlNodeWrapper : public ControlNode {
       if (info.break_loop) {
         return;
       }
+      inner_functor_.act();
       ControlNode* branch = branches_[info.next_branch];
       if (branch != nullptr) {
         branch->start();
       }
-      inner_functor_.act();
       if (!info.save_point) {
         return;
       }
@@ -69,8 +69,12 @@ class ControlNodeWrapper : public ControlNode {
   }
 
   /// @copydoc ControlNode::connect_next
-  void connect_next(ControlNode* dest_node, size_t src_index) override {
+  bool connect_next(ControlNode* dest_node, size_t src_index) override {
+    if (src_index >= branches_count) {
+      return false;
+    }
     branches_[src_index] = dest_node;
+    return true;
   }
 
  protected:

@@ -1,21 +1,16 @@
 #pragma once
 
-#include <cstdint>
-
 namespace nds::ex {
 
+template<typename T>
 class CounterNode {
  public:
-  CounterNode(size_t end_index) : end_(end_index), current_(0) {}
-  CounterNode(size_t start_index, size_t end_index) : end_(end_index), current_(start_index) {}
-  CounterNode(size_t start_index, size_t end_index, size_t step) : end_(end_index), step_(step), current_(start_index) {}
+  explicit CounterNode(T end_index) : end_(end_index), current_(0) {}
+  CounterNode(T start_index, T end_index) : end_(end_index), current_(start_index) {}
+  CounterNode(T start_index, T end_index, T step) : end_(end_index), step_(step), current_(start_index) {}
 
-  size_t operator()() {
-    if (!is_init) {
-      is_init = true;
-      return current_;
-    }
-    return ++current_;
+  T operator()() {
+    return current_++;
   }
 
   bool done() {
@@ -23,11 +18,10 @@ class CounterNode {
   }
 
  private:
-  size_t end_;
-  size_t step_ = 1;
+  T end_;
+  T step_ = 1;
 
-  size_t current_;
-  bool is_init = false;
+  T current_;
 };
 
 } // nds::ex

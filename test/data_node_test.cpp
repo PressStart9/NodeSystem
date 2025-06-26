@@ -30,7 +30,6 @@ TEST_F(DataNodeTests, DefaultTest) {
   auto c = nds::DataNodeWrapper(&variable_function);
 
   b.act();
-  std::cout << *reinterpret_cast<float*>(b.get_result_elem(0)) << '\n';
 
   auto d = CHECK(CallCounter(), 2.2f, std::string("string"));
   d.connect_input(&a, 0, 0);
