@@ -84,8 +84,13 @@ class ControlNodeWrapper : public ControlNode {
   DataNodeWrapper<DataFunctor> inner_functor_;
 };
 
-// Deduction guide
-template<typename CF, typename DFW>
+// Deduction guides
+template<typename CF, typename DFW,
+  std::enable_if_t<fun::is_instantiation_of_v<DataNodeWrapper, std::decay_t<DFW>>>* = nullptr>
 ControlNodeWrapper(CF&&, DFW&&) -> ControlNodeWrapper<std::decay_t<CF>, typename std::decay_t<DFW>::decay_data_functor_t>;
+
+template<typename CF, typename DF,
+  std::enable_if_t<!fun::is_instantiation_of_v<DataNodeWrapper, std::decay_t<DF>>>* = nullptr>
+ControlNodeWrapper(CF&&, DF&&) -> ControlNodeWrapper<std::decay_t<CF>, std::decay_t<DF>>;
 
 } // nds

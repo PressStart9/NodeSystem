@@ -25,6 +25,8 @@
 #define VAR(type, value) nds::DataNodeWrapper<nds::ex::VariableNode<type>>(nds::ex::VariableNode<type>(value))
 #define CHECK(...) nds::DataNodeWrapper(nds::ex::CheckNode{__VA_ARGS__})
 
+#define LINEAR(node) nds::ControlNodeWrapper(nds::ex::LinearNode<decltype(node)>(), node)
+
 struct CallCounter {
   CallCounter() {
     ++construct_count;
