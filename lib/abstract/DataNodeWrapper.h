@@ -29,7 +29,7 @@ class DataNodeWrapper : public DataNode {
   using input_tuple_t = fun::function_arguments_t<func_t>;
 
   template<typename DF,
-    std::enable_if_t<!std::is_same_v<std::decay<DF>, DataNodeWrapper>>* = nullptr>
+    typename = std::enable_if_t<!std::is_same_v<std::decay<DF>, DataNodeWrapper>>>
   explicit DataNodeWrapper(DF&& functor) : functor_(std::forward<DF>(functor)) {}
 
   DataNodeWrapper(const DataNodeWrapper& wrapper) : functor_(wrapper.functor_) {}

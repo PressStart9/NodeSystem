@@ -2,17 +2,18 @@
 #include <iostream>
 #include <memory>
 
-#include "abstract/DataNode.h"
-#include "abstract/DataNodeWrapper.h"
 #include "abstract/ControlNode.h"
 #include "abstract/ControlNodeWrapper.h"
-#include "examples/data_nodes/ConstantNode.h"
-#include "examples/data_nodes/VariableNode.h"
-#include "examples/data_nodes/PrintNode.h"
-#include "examples/data_nodes/CounterNode.h"
-#include "examples/control_nodes/LinearNode.h"
-#include "examples/control_nodes/ForNode.h"
+#include "abstract/DataNode.h"
+#include "abstract/DataNodeWrapper.h"
 #include "examples/control_nodes/BranchNode.h"
+#include "examples/control_nodes/ForNode.h"
+#include "examples/control_nodes/LinearNode.h"
+#include "examples/data_nodes/ConstantNode.h"
+#include "examples/data_nodes/CounterNode.h"
+#include "examples/data_nodes/EmptyNode.h"
+#include "examples/data_nodes/PrintNode.h"
+#include "examples/data_nodes/VariableNode.h"
 
 #define CONST(type, value) nds::DataNodeWrapper(nds::ex::ConstantNode<type>(value))
 #define VAR(type, value) nds::DataNodeWrapper(nds::ex::VariableNode<type>(value))

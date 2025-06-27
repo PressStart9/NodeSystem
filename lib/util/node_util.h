@@ -81,31 +81,36 @@ struct callable_func_impl<TResult(*)(TArgs...)> {
   using type = TResult(TArgs...);
 };
 
-template<typename T, typename = void>
-struct parse_size_impl;
+template<typename T>
+struct is_integral_constant_impl : std::false_type {};
 
-template<typename Functor>
-struct parse_size_impl<Functor, std::enable_if_t<!std::is_function_v<Functor>>> {
-    static constexpr size_t value = Functor::size;
-};
+template<typename T, T Value>
+struct is_integral_constant_impl<std::integral_constant<T, Value>> : std::true_type {};
 
-template<typename Function>
-struct parse_size_impl<Function, std::enable_if_t<std::is_function_v<Function>>> {
-    using callable_t = typename callable_func_impl<Function>::type;
-    using arguments_t = typename function_signature_impl<callable_t>::arguments_t;
-    static constexpr size_t value = std::tuple_size_v<std::tuple_element_t<1, arguments_t>>;
+template<typename T>
+struct parse_size_impl {
+  using callable_t = typename callable_func_impl<T>::type;
+  using arguments_t = typename function_signature_impl<callable_t>::arguments_t;
+  static constexpr size_t value = []() {
+    if constexpr (std::tuple_size_v<arguments_t> != 0 &&
+        is_integral_constant_impl<std::tuple_element_t<std::tuple_size_v<arguments_t> - 1, arguments_t>>{}) {
+      return std::tuple_element_t<std::tuple_size_v<arguments_t> - 1, arguments_t>::value;
+    } else {
+      return T::size;
+    }
+  }();
 };
 
 } // impl
 
 /// @brief Transform type into tuple.
-/// For std::tuple<TArgs...> it does nothing.
-/// For void it is std::tuple<>.
-/// For other types T it is std::tuple<T>.
+/// For `std::tuple<TArgs...>` it does nothing.
+/// For `void` it is std::tuple<>.
+/// For other types `T` it is `std::tuple<T>`.
 template<typename TType>
 using parse_tuple_t = typename impl::parse_tuple_impl<TType>::result_t;
 
-/// @brief Parse size from functor `using` or from `std::integral_constant` from function signature.
+/// @brief Parse size from functor `static constexpr size_t size` or from `std::integral_constant` from function signature (as last argument).
 template<typename TType>
 static constexpr size_t parse_size_v = impl::parse_size_impl<TType>::value;
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "DataNode.h"
 
 namespace nds {
 
@@ -31,7 +32,7 @@ class ControlNode {
   /// Automatically calls next node if it exists.
   virtual void start() = 0;
 
-  /// @brief Get inner data node. 
+  /// @brief Get inner data node.
   virtual DataNode* get_data_node() = 0;
 
   /// @brief Connects node to one of branches of this node.

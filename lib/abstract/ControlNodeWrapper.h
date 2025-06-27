@@ -28,6 +28,7 @@ class ControlNodeWrapper : public ControlNode {
  public:
   using decay_control_functor_t = ControlFunctor;
   using func_t = fun::callable_func_t<decay_control_functor_t>;
+  using arguments_tuple_t = fun::function_arguments_t<func_t>;
   static constexpr size_t branches_count = fun::parse_size_v<decay_control_functor_t>;
 
   template<typename CF, typename DF>
@@ -42,14 +43,38 @@ class ControlNodeWrapper : public ControlNode {
   /// @copydoc ControlNode::run
   ControlInfo run() override {
     inner_functor_.act();
-    BranchInfo info = functor_(&inner_functor_);
+    BranchInfo info = [&](){
+      if constexpr (std::tuple_size_v<arguments_tuple_t> == 0) {
+        return functor_();
+      } else if constexpr (std::tuple_size_v<arguments_tuple_t> == 1 &&
+          std::is_pointer_v<std::tuple_element_t<0, arguments_tuple_t>>) {
+        return functor_(&inner_functor_);
+      } else if constexpr (std::tuple_size_v<arguments_tuple_t> == 1 &&
+          std::is_integral_v<std::tuple_element_t<1, arguments_tuple_t>>) {
+        return functor_(std::tuple_element_t<1, arguments_tuple_t>{});
+      } else {
+        return functor_(&inner_functor_, std::tuple_element_t<1, arguments_tuple_t>{});
+      }
+    }();
     return {info.break_loop ? nullptr : branches_[info.next_branch], info.save_point};
   }
 
   /// @copydoc ControlNode::start
   void start() override {
     while (true) {
-      BranchInfo info = functor_(&inner_functor_);
+      BranchInfo info = [&](){
+        if constexpr (std::tuple_size_v<arguments_tuple_t> == 0) {
+          return functor_();
+        } else if constexpr (std::tuple_size_v<arguments_tuple_t> == 1 &&
+            std::is_pointer_v<std::tuple_element_t<0, arguments_tuple_t>>) {
+          return functor_(&inner_functor_);
+            } else if constexpr (std::tuple_size_v<arguments_tuple_t> == 1 &&
+                std::is_integral_v<std::tuple_element_t<1, arguments_tuple_t>>) {
+              return functor_(std::tuple_element_t<1, arguments_tuple_t>{});
+                } else {
+                  return functor_(&inner_functor_, std::tuple_element_t<1, arguments_tuple_t>{});
+                }
+      }();
       if (info.break_loop) {
         return;
       }
@@ -86,11 +111,11 @@ class ControlNodeWrapper : public ControlNode {
 
 // Deduction guides
 template<typename CF, typename DFW,
-  std::enable_if_t<fun::is_instantiation_of_v<DataNodeWrapper, std::decay_t<DFW>>>* = nullptr>
+  typename = std::enable_if_t<fun::is_instantiation_of_v<DataNodeWrapper, std::decay_t<DFW>>>>
 ControlNodeWrapper(CF&&, DFW&&) -> ControlNodeWrapper<std::decay_t<CF>, typename std::decay_t<DFW>::decay_data_functor_t>;
 
 template<typename CF, typename DF,
-  std::enable_if_t<!fun::is_instantiation_of_v<DataNodeWrapper, std::decay_t<DF>>>* = nullptr>
+  typename = std::enable_if_t<!fun::is_instantiation_of_v<DataNodeWrapper, std::decay_t<DF>>>>
 ControlNodeWrapper(CF&&, DF&&) -> ControlNodeWrapper<std::decay_t<CF>, std::decay_t<DF>>;
 
 } // nds
