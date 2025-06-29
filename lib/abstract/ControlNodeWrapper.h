@@ -43,38 +43,14 @@ class ControlNodeWrapper : public ControlNode {
   /// @copydoc ControlNode::run
   ControlInfo run() override {
     inner_functor_.act();
-    BranchInfo info = [&](){
-      if constexpr (std::tuple_size_v<arguments_tuple_t> == 0) {
-        return functor_();
-      } else if constexpr (std::tuple_size_v<arguments_tuple_t> == 1 &&
-          std::is_pointer_v<std::tuple_element_t<0, arguments_tuple_t>>) {
-        return functor_(&inner_functor_);
-      } else if constexpr (std::tuple_size_v<arguments_tuple_t> == 1 &&
-          std::is_integral_v<std::tuple_element_t<1, arguments_tuple_t>>) {
-        return functor_(std::tuple_element_t<1, arguments_tuple_t>{});
-      } else {
-        return functor_(&inner_functor_, std::tuple_element_t<1, arguments_tuple_t>{});
-      }
-    }();
+    BranchInfo info = call_functor();
     return {info.break_loop ? nullptr : branches_[info.next_branch], info.save_point};
   }
 
   /// @copydoc ControlNode::start
   void start() override {
     while (true) {
-      BranchInfo info = [&](){
-        if constexpr (std::tuple_size_v<arguments_tuple_t> == 0) {
-          return functor_();
-        } else if constexpr (std::tuple_size_v<arguments_tuple_t> == 1 &&
-            std::is_pointer_v<std::tuple_element_t<0, arguments_tuple_t>>) {
-          return functor_(&inner_functor_);
-            } else if constexpr (std::tuple_size_v<arguments_tuple_t> == 1 &&
-                std::is_integral_v<std::tuple_element_t<1, arguments_tuple_t>>) {
-              return functor_(std::tuple_element_t<1, arguments_tuple_t>{});
-                } else {
-                  return functor_(&inner_functor_, std::tuple_element_t<1, arguments_tuple_t>{});
-                }
-      }();
+      BranchInfo info = call_functor();
       if (info.break_loop) {
         return;
       }
@@ -107,6 +83,26 @@ class ControlNodeWrapper : public ControlNode {
 
   decay_control_functor_t functor_;
   DataNodeWrapper<DataFunctor> inner_functor_;
+
+ private:
+  constexpr BranchInfo call_functor() {
+    if constexpr (std::tuple_size_v<arguments_tuple_t> == 0) {
+      return functor_();
+    } else if constexpr (std::tuple_size_v<arguments_tuple_t> == 1) {
+      if constexpr (std::is_pointer_v<
+                        std::tuple_element_t<0, arguments_tuple_t>>) {
+        return functor_(&inner_functor_);
+      } else if constexpr (std::is_integral_v<
+                               std::tuple_element_t<0, arguments_tuple_t>>) {
+        return functor_(std::tuple_element_t<0, arguments_tuple_t>{});
+      } else {
+        throw std::exception();
+      }
+    } else {
+      return functor_(&inner_functor_,
+                      std::tuple_element_t<1, arguments_tuple_t>{});
+    }
+  }
 };
 
 // Deduction guides

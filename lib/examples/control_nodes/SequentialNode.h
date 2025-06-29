@@ -7,9 +7,9 @@ namespace nds::ex {
 template<size_t BranchCount>
 class SequentialNode {
  public:
-  static constexpr size_t size = 2;
+  static constexpr size_t size = BranchCount;
 
-  BranchInfo operator()(void* node) {
+  BranchInfo operator()() {
     BranchInfo info = {current_, current_ >= size, true};
     ++current_;
     return info;

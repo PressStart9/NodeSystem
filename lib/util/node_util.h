@@ -81,6 +81,11 @@ struct callable_func_impl<TResult(*)(TArgs...)> {
   using type = TResult(TArgs...);
 };
 
+template<typename TResult, typename... TArgs>
+struct callable_func_impl<TResult(TArgs...)> {
+  using type = TResult(TArgs...);
+};
+
 template<typename T>
 struct is_integral_constant_impl : std::false_type {};
 
@@ -91,10 +96,13 @@ template<typename T>
 struct parse_size_impl {
   using callable_t = typename callable_func_impl<T>::type;
   using arguments_t = typename function_signature_impl<callable_t>::arguments_t;
-  static constexpr size_t value = []() {
-    if constexpr (std::tuple_size_v<arguments_t> != 0 &&
-        is_integral_constant_impl<std::tuple_element_t<std::tuple_size_v<arguments_t> - 1, arguments_t>>{}) {
-      return std::tuple_element_t<std::tuple_size_v<arguments_t> - 1, arguments_t>::value;
+  static constexpr size_t value = []() constexpr {
+    if constexpr (std::tuple_size_v<arguments_t> != 0) {
+      if constexpr (is_integral_constant_impl<std::tuple_element_t<std::tuple_size_v<arguments_t> - 1, arguments_t>>{}) {
+        return std::tuple_element_t<std::tuple_size_v<arguments_t> - 1, arguments_t>::value;
+      } else {
+        return T::size;
+      }
     } else {
       return T::size;
     }

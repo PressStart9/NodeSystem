@@ -4,12 +4,11 @@
 
 namespace nds::ex {
 
-template<typename T>
 class LinearNode {
  public:
   static constexpr size_t size = 1;
 
-  size_t operator()(DataNodeWrapper<T>*) const {
+  size_t operator()() const {
     return 0;
   }
 };

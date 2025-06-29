@@ -22,8 +22,8 @@
 int main() {
   std::cout << std::boolalpha << std::endl;
 
-  auto a = nds::ControlNodeWrapper(nds::ex::ForNode(), nds::DataNodeWrapper(nds::ex::CounterNode<size_t>(10)));
-  auto b = nds::ControlNodeWrapper(nds::ex::LinearNode<decltype(PRINT(size_t))::decay_data_functor_t>(), PRINT(size_t));
+  auto a = nds::ControlNodeWrapper(nds::ex::ForNode<size_t>(), nds::DataNodeWrapper(nds::ex::CounterNode<size_t>(10)));
+  auto b = nds::ControlNodeWrapper(nds::ex::LinearNode(), PRINT(size_t));
 
   b.get_data_node()->connect_input(a.get_data_node(), 0, 0);
   a.connect_next(&b, 0);
