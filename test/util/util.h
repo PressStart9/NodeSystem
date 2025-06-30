@@ -14,6 +14,7 @@
 #include "examples/data_nodes/SumNode.h"
 #include "examples/data_nodes/EmptyNode.h"
 #include "examples/data_nodes/SetNode.h"
+#include "examples/data_nodes/GetNode.h"
 #include "examples/control_nodes/LinearNode.h"
 #include "examples/control_nodes/ForNode.h"
 #include "examples/control_nodes/BranchNode.h"

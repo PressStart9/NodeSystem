@@ -109,11 +109,28 @@ TEST_F(ControlNodeTests, SequencePassTest) {
 TEST_F(ControlNodeTests, ForLoopTest) {
   auto loop = ControlNodeWrapper(ex::ForNode<size_t>(), DataNodeWrapper(ex::CounterNode<size_t>(10)));
   size_t counter = 0;
-  auto b = nds::ControlNodeWrapper(nds::ex::LinearNode(), [&counter](size_t i){ ASSERT_EQ(counter++, i); });
+  auto b = LINEAR([&counter](size_t i){ ASSERT_EQ(counter++, i); });
 
   b.get_data_node()->connect_input(loop.get_data_node(), 0, 0);
   loop.connect_next(&b, 0);
 
   loop.start();
   ASSERT_EQ(10, counter);
+}
+
+TEST_F(ControlNodeTests, BranchTest) {
+  auto loop = ControlNodeWrapper(ex::ForNode<size_t>(), DataNodeWrapper(ex::CounterNode<size_t>(2)));
+  auto branch = ControlNodeWrapper(ex::BranchNode<size_t>(), ex::GetNode<size_t>());
+  auto check_false = LINEAR(CHECK(size_t{0}));
+  auto check_true = LINEAR(CHECK(size_t{1}));
+
+  loop.connect_next(&branch, 0);
+  branch.connect_next(&check_false, 1);
+  branch.connect_next(&check_true, 0);
+
+  branch.get_data_node()->connect_input(loop.get_data_node(), 0, 0);
+  check_false.get_data_node()->connect_input(loop.get_data_node(), 0, 0);
+  check_true.get_data_node()->connect_input(loop.get_data_node(), 0, 0);
+
+  loop.start();
 }

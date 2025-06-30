@@ -50,11 +50,11 @@ class ControlNodeWrapper : public ControlNode {
   /// @copydoc ControlNode::start
   void start() override {
     while (true) {
+      inner_functor_.act();
       BranchInfo info = call_functor();
       if (info.break_loop) {
         return;
       }
-      inner_functor_.act();
       ControlNode* branch = branches_[info.next_branch];
       if (branch != nullptr) {
         branch->start();

@@ -14,7 +14,7 @@ class CounterNode {
   }
 
   bool done() {
-    return current_ >= end_;
+    return current_ > end_;
   }
 
  private:
